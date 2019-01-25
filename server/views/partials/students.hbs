@@ -4,9 +4,9 @@
 	</div>
 </article>
 
-<form method="POST" action="/admin/enrollstudents" target="_self">
-	<label class="label">Upload section registrations: {{> asterisk}}</label>
-	<div class="field is-grouped">
+<form method="POST" target="_self">
+	<label class="label">Upload section registration: {{> asterisk}}</label>
+	<div class="field">
 		<div class="control">
 			<div class="file has-name">
 				<label class="file-label">
@@ -14,7 +14,7 @@
 					<input id="csv" type="hidden" name="data" />
 					<span class="file-cta">
 						<span class="file-label">
-							Choose a file…
+							Choose file…
 						</span>
 					</span>
 					<span id="filename" class="file-name">
@@ -23,8 +23,13 @@
 				</label>
 			</div>
 		</div>
+	</div>
+	<div class="field is-grouped">
 		<div class="control">
-			<input type="submit" class="button is-info" value="Submit"></input>
+			<input formaction="/admin/enrollstudents" type="submit" class="button is-info" value="Submit"></input>
+		</div>
+		<div class="control">
+			<input formaction="/admin/removestudents" type="submit" class="button is-danger" value="Delete All"></input>
 		</div>
 	</div>
 </form>
