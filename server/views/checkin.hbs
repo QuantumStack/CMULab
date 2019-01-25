@@ -29,7 +29,7 @@
 							{{#if radio}}
 								<input id="score" class="is-hidden" name="score" type="number" required />
 								<div class="columns is-multiline is-mobile">
-									{{#each (range maxscore)}}
+									{{#each (range minscore maxscore)}}
 										<div class="column is-3">
 											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-outlined is-large score-button">
 												{{this}}
@@ -52,7 +52,7 @@
 								</script>
 							{{else}}
 								<div class="control">
-									<input class="input" name="score" type="number" placeholder="Example: 3" min="0" max="{{maxscore}}" required>
+									<input class="input" name="score" type="number" placeholder="Example: 3" min="{{minscore}}" max="{{maxscore}}" required>
 								</div>
 							{{/if}}
 						</div>

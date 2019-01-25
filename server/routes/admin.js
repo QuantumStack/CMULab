@@ -37,7 +37,8 @@ router.get('/delete', adminRequired, (req, res) => {
   res.render('admin', {
     course: process.env.CMULAB_COURSE,
     loc: process.env.CMULAB_LOC,
-    isDelete: true,
+    isData: true,
+    isDataDelete: true,
     version: version(),
   });
 });
@@ -200,6 +201,14 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
     }
     iterItems(0);
   }).catch(err => next(createError(400, err)));
+});
+
+/* POST remove all students */
+router.post('/removestudents', adminRequired, (req, res, next) => {
+  Student.deleteMany({}).exec((err) => {
+    if (err) return next(createError(500, err));
+    return res.redirect('/admin/students');
+  });
 });
 
 module.exports = router;

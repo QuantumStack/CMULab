@@ -19,6 +19,7 @@ router.get('/:student_id', authRequired, (req, res) => {
       section,
       radio: process.env.CMULAB_RADIOINPUT,
       lab: process.env.CMULAB_MANUALLAB,
+      minscore: Number.parseInt(process.env.CMULAB_MINSCORE, 10),
       maxscore: Number.parseInt(process.env.CMULAB_MAXSCORE, 10),
     });
   });

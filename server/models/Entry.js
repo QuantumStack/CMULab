@@ -8,7 +8,7 @@ const entrySchema = new mongoose.Schema({
   score: {
     type: Number,
     required: true,
-    min: 0,
+    min: process.env.CMULAB_MINSCORE,
     max: process.env.CMULAB_MAXSCORE,
   },
   ta: { type: String, required: true },

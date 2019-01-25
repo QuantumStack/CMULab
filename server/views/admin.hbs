@@ -21,8 +21,7 @@
 <div class="tabs is-centered is-boxed is-small">
 	<ul>
 		<li class="{{#if isLab}}is-active{{/if}}"><a href="/admin/lab">Assign Lab</a></li>
-		<li class="{{#if isData}}is-active{{/if}}"><a href="/admin/data">Get Data</a></li>
-		<li class="{{#if isDelete}}is-active{{/if}}"><a href="/admin/delete">Delete Data</a></li>
+		<li class="{{#if isData}}is-active{{/if}}"><a href="/admin/data">Data</a></li>
 		<li class="{{#if isUsers}}is-active{{/if}}"><a href="/admin/users">Users</a></li>
 		<li class="{{#if isStudents}}is-active{{/if}}"><a href="/admin/students">Students</a></li>
 	</ul>
@@ -31,12 +30,31 @@
 <div class="container">
 	<div class="columns">
 		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isDataView}}is-6 is-offset-3{{/unless}}">
+			{{#if isData}}
+				{{#unless isDataView}}
+					<div class="tabs is-small is-toggle is-toggle-rounded is-fullwidth">
+						<ul>
+							<li class="{{#unless isDataDelete}}is-active{{/unless}}">
+								<a href="/admin/data">View & Download</a>
+							</li>
+							<li class="{{#if isDataDelete}}is-active{{/if}}">
+								<a href="/admin/delete">Delete</a>
+							</li>
+						</ul>
+					</div>
+				{{/unless}}
+			{{/if}}
+
 			{{#if isLab}} {{> lab}} {{/if}}
 			{{#if isData}}
 				{{#if isDataView}}
 					{{> viewdata}}
 				{{else}}
-					{{> data}}
+					{{#if isDataDelete}}
+						{{> delete}}
+					{{else}}
+						{{> data}}
+					{{/if}}
 				{{/if}}
 			{{/if}}
 			{{#if isDelete}} {{> delete}} {{/if}}

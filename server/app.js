@@ -39,7 +39,11 @@ app.engine('hbs', hbs({
       return Object.entries(freqs).sort((a, b) => b[1] - a[1])
         .map(([item]) => item).join(', ');
     },
-    range: n => [...Array(n + 1).keys()],
+    range: (n, m) => {
+      const L = [];
+      for (let i = n; i <= m; i += 1) L.push(i);
+      return L;
+    },
   },
 }));
 app.set('view engine', 'hbs');
