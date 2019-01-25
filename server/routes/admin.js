@@ -22,11 +22,11 @@ router.get('/lab', adminRequired, (req, res) => {
   });
 });
 
-router.get('/csv', adminRequired, (req, res) => {
+router.get('/data', adminRequired, (req, res) => {
   res.render('admin', {
     course: process.env.CMULAB_COURSE,
     loc: process.env.CMULAB_LOC,
-    isCsv: true,
+    isData: true,
     version: version(),
   });
 });
@@ -53,8 +53,8 @@ router.get('/users', adminRequired, (req, res, next) => {
   });
 });
 
-/* GET csv */
-router.get('/getcsv', adminRequired, (req, res, next) => {
+/* GET data */
+router.get('/getdata', adminRequired, (req, res, next) => {
   const options = {};
   const { startDate, endDate } = req.query;
   if (startDate && endDate) {

@@ -4,7 +4,7 @@
 	</div>
 </article>
 
-<form method="GET" action="/admin/getcsv" target="_self">
+<form method="GET" action="/admin/getdata" target="_self">
 	<div class="field is-horizontal">
 		<div class="field-body">
 			<div class="field">
@@ -37,10 +37,20 @@
 			</div>
 		</div>
 	</div>
-	<div class="field">
-		<label class="label">TA:</label>
-		<div class="control">
-			<input class="input" name="ta" type="text" placeholder="Example: iliano">
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">TA:</label>
+				<div class="control">
+					<input class="input" name="ta" type="text" placeholder="Example: iliano">
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">Student:</label>
+				<div class="control">
+					<input class="input" name="student_id" type="text" placeholder="Example: aditya">
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="field">

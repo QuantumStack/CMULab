@@ -21,7 +21,7 @@
 <div class="tabs is-centered is-boxed is-small">
 	<ul>
 		<li class="{{#if isLab}}is-active{{/if}}"><a href="/admin/lab">Assign Lab</a></li>
-		<li class="{{#if isCsv}}is-active{{/if}}"><a href="/admin/csv">Get CSV</a></li>
+		<li class="{{#if isData}}is-active{{/if}}"><a href="/admin/data">Get Data</a></li>
 		<li class="{{#if isDelete}}is-active{{/if}}"><a href="/admin/delete">Delete Data</a></li>
 		<li class="{{#if isUsers}}is-active{{/if}}"><a href="/admin/users">Add/Remove Users</a></li>
 	</ul>
@@ -31,7 +31,7 @@
 	<div class="columns">
 		<div class="column is-mobile is-10-mobile is-offset-1-mobile is-6 is-offset-3">
 			{{#if isLab}} {{> lab}} {{/if}}
-			{{#if isCsv}} {{> csv}} {{/if}}
+			{{#if isData}} {{> data}} {{/if}}
 			{{#if isDelete}} {{> delete}} {{/if}}
 			{{#if isUsers}} {{> users}} {{/if}}
 		</div>
