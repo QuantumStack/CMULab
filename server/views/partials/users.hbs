@@ -1,0 +1,55 @@
+<article class="message is-info">
+	<div class="message-body">
+		<i>Users</i> should be instructors and TAs that can check students in for labs. <i>Admins</i> are people who can access the page you're on right now.
+	</div>
+</article>
+
+<form method="POST" action="/admin/adduser" target="_self">
+	<label class="label">Student ID: {{> asterisk}}</label>
+	<div class="field is-grouped">
+		<div class="control is-expanded">
+			<input class="input" name="student_id" type="text" placeholder="Example: iliano" required>
+		</div>
+		<div class="control">
+			<input type="submit" class="button is-info" value="Add"></input>
+		</div>
+	</div>
+	<div class="field">
+		<label class="checkbox">
+			<input name="admin" type="checkbox" />
+			Make this user an admin
+		</label>
+	</div>
+</form>
+
+<br />
+
+<table class="table is-hoverable is-fullwidth">
+	<thead>
+		<tr>
+			<th>Student ID</th>
+			<th>Admin?</th>
+			<th class="is-narrow"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each users}}
+			<tr>
+				<th>
+					{{this._id}}
+				</th>
+				<th>
+					{{#if this.admin}}
+						<span class="has-text-success">Yes</span>
+					{{/if}}
+				</th>
+				<th>
+					<form method="POST" action="/admin/removeuser" target="_self">
+						<input type="hidden" name="student_id" value="{{this._id}}" />
+						<input type="submit" class="button is-small is-danger" value="Remove"></input>
+					</form>
+				</th>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

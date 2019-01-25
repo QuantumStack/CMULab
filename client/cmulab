@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Change directory to the directory of the script
+cd "$(dirname "$0")"
+
+export CMULAB_COURSE="" # insert course number here
+export CMULAB_LOC="" # insert hosting URL here (without trailing /)
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Darwin*)    ./checkin_mac $CMULAB_COURSE $CMULAB_LOC;;
+    *)          ./checkin_gnu $CMULAB_COURSE $CMULAB_LOC;;
+esac

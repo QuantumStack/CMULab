@@ -1,0 +1,46 @@
+<section class="hero is-light is-bold is-fullheight">
+	<div class="hero-body">
+		<div class="container">
+			<div class="columns">
+				<div class="column is-4 is-offset-4">
+					<p class="is-pulled-right">
+						<a href="/" class="tag is-primary is-large is-rounded">CMULab</a>
+					</p>
+					<h3 class="title is-5">{{course}} Check-in</h3>
+					<h6 class="subtitle is-5">Student: {{student}}</h6>
+
+					<form method="post" action="/checkin/{{student}}">
+						{{!-- <div class="field">
+							<label class="label">Lab</label>
+							<div class="control">
+								<input class="input" name="lab" type="number" placeholder="Example: 12">
+							</div>
+						</div> --}}
+						<div class="field">
+							<label class="label">Section: {{> asterisk}}</label>
+							<div class="control">
+								<input class="input" name="section" type="text" placeholder="Example: A" required>
+							</div>
+						</div>
+						<div class="field">
+							<label class="label">Score: {{> asterisk}}</label>
+							<div class="control">
+								<input class="input" name="score" type="number" placeholder="Example: 3" min="0" max="{{maxscore}}" required>
+							</div>
+						</div>
+						<div class="field">
+							<div class="control">
+								<input type="submit" class="button is-info is-fullwidth" value="Submit Score!"></input>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hero-foot">
+		<p>
+			<small>{{> footer}}</small>
+		</p>
+	</div>
+</section>

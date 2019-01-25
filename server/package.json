@@ -1,0 +1,55 @@
+{
+  "name": "cmulab-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "QuantumStack",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dotenv": "^6.2.0",
+    "express": "~4.16.0",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.6",
+    "http-errors": "~1.6.2",
+    "json2csv": "^4.3.3",
+    "mongodb": "^3.1.12",
+    "mongoose": "^5.4.6",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "^0.11.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0"
+  },
+  "devDependencies": {
+    "debug": "~2.6.9",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "rules": {
+      "consistent-return": "off",
+      "no-underscore-dangle": [
+        "error",
+        {
+          "allow": [
+            "_id"
+          ]
+        }
+      ],
+      "camelcase": [
+        "error",
+        {
+          "allow": [
+            "student_id"
+          ]
+        }
+      ]
+    }
+  }
+}

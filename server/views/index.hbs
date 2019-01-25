@@ -1,0 +1,34 @@
+<section class="hero is-black is-bold is-fullheight">
+	<div class="hero-body">
+		<div class="container">
+			<div class="columns">
+				<div class="column is-4 is-offset-4">
+					<p>
+		      			<center><a href="https://cmulab.quantumstack.xyz" class="tag is-primary is-large is-rounded">CMULab</a> &nbsp;<span class="title is-4"> for {{course}}</span></center>
+		  			</p>
+		  			<br />
+		  			<p class="subtitle is-5 has-text-centered">
+		  				Secure check-in and scoring. Easy for instructors, easy for students.
+		  			</p>
+		  			<form method="POST" action="/go">
+			  			<div class="field is-grouped">
+							<p class="control is-expanded">
+								<input class="input" type="text" name="student_id" placeholder="Check-in student ID">
+							</p>
+							<p class="control">
+								<input type="submit" class="button is-info is-outlined" value="Go"></input>
+							</p>
+						</div>
+					</form>
+					<br />
+					<p class="has-text-centered has-text-grey"><a href="/admin"><small>Admin Console</small></a></p>
+	  			</div>
+  			</div>
+		</div>
+	</div>
+	<div class="hero-foot">
+		<p>
+			<small class="has-text-grey-light">{{> footer}}</small>
+		</p>
+	</div>
+</section>

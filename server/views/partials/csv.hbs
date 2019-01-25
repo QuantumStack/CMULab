@@ -1,0 +1,51 @@
+<article class="message is-info">
+	<div class="message-body">
+		Fill in the boxes below to filter data. Note that you <i>cannot</i> must use start and end dates together, and end dates are <i>not</i> inclusive. If you want <i>all</i> the data stored, just click Submit without any filters.
+	</div>
+</article>
+
+<form method="GET" action="/admin/getcsv" target="_self">
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">Start Date:</label>
+				<div class="control">
+					<input class="input" name="startDate" type="text" placeholder="Example: 2019-01-20">
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">End Date:</label>
+				<div class="control">
+					<input class="input" name="endDate" type="text" placeholder="Example: 2019-01-21">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">Section:</label>
+				<div class="control">
+					<input class="input" name="section" type="text" placeholder="Example: A">
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">Lab:</label>
+				<div class="control">
+					<input class="input" name="lab" type="number" min="0" placeholder="Example: 1">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="field">
+		<label class="label">TA:</label>
+		<div class="control">
+			<input class="input" name="ta" type="text" placeholder="Example: iliano">
+		</div>
+	</div>
+	<div class="field">
+		<div class="control">
+			<input type="submit" class="button is-info" value="View Data"></input>
+		</div>
+	</div>
+</form>
