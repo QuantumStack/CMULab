@@ -27,7 +27,7 @@
 <table class="table is-hoverable is-fullwidth">
 	<thead>
 		<tr>
-			<th>Student ID</th>
+			<th>User ID</th>
 			<th>Admin?</th>
 			<th class="is-narrow"></th>
 		</tr>
@@ -35,20 +35,20 @@
 	<tbody>
 		{{#each users}}
 			<tr>
-				<th>
+				<td>
 					{{this._id}}
-				</th>
-				<th>
+				</td>
+				<td>
 					{{#if this.admin}}
 						<span class="has-text-success">Yes</span>
 					{{/if}}
-				</th>
-				<th>
+				</td>
+				<td>
 					<form method="POST" action="/admin/removeuser" target="_self">
 						<input type="hidden" name="student_id" value="{{this._id}}" />
 						<input type="submit" class="button is-small is-danger" value="Remove"></input>
 					</form>
-				</th>
+				</td>
 			</tr>
 		{{/each}}
 	</tbody>

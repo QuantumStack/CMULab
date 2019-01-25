@@ -4,7 +4,7 @@
 	</div>
 </article>
 
-<form method="GET" action="/admin/getdata" target="_self">
+<form method="GET" target="_self">
 	<div class="field is-horizontal">
 		<div class="field-body">
 			<div class="field">
@@ -53,9 +53,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="field">
+	<div class="field is-grouped">
 		<div class="control">
-			<input type="submit" class="button is-info" value="View Data"></input>
+			<input formaction="/admin/viewdata" type="submit" class="button is-info" value="View Data"></input>
+		</div>
+		<div class="control">
+			<input formaction="/admin/getcsv" type="submit" class="button" value="Get CSV"></input>
 		</div>
 	</div>
 </form>

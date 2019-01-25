@@ -23,15 +23,22 @@
 		<li class="{{#if isLab}}is-active{{/if}}"><a href="/admin/lab">Assign Lab</a></li>
 		<li class="{{#if isData}}is-active{{/if}}"><a href="/admin/data">Get Data</a></li>
 		<li class="{{#if isDelete}}is-active{{/if}}"><a href="/admin/delete">Delete Data</a></li>
-		<li class="{{#if isUsers}}is-active{{/if}}"><a href="/admin/users">Add/Remove Users</a></li>
+		<li class="{{#if isUsers}}is-active{{/if}}"><a href="/admin/users">Users</a></li>
+		<li class="{{#if isStudents}}is-active{{/if}}"><a href="/admin/students">Students</a></li>
 	</ul>
 </div>
 
 <div class="container">
 	<div class="columns">
-		<div class="column is-mobile is-10-mobile is-offset-1-mobile is-6 is-offset-3">
+		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isDataView}}is-6 is-offset-3{{/unless}}">
 			{{#if isLab}} {{> lab}} {{/if}}
-			{{#if isData}} {{> data}} {{/if}}
+			{{#if isData}}
+				{{#if isDataView}}
+					{{> viewdata}}
+				{{else}}
+					{{> data}}
+				{{/if}}
+			{{/if}}
 			{{#if isDelete}} {{> delete}} {{/if}}
 			{{#if isUsers}} {{> users}} {{/if}}
 		</div>

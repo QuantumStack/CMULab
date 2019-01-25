@@ -54,23 +54,41 @@ router.get('/users', adminRequired, (req, res, next) => {
 });
 
 /* GET data */
-router.get('/getdata', adminRequired, (req, res, next) => {
+function filterData(query, callback) {
   const options = {};
-  const { startDate, endDate } = req.query;
+  const { startDate, endDate } = query;
   if (startDate && endDate) {
     options.date = {
       $gte: new Date(startDate),
       $lt: new Date(endDate),
     };
-    delete req.query.startDate;
-    delete req.query.endDate;
+    delete query.startDate;
+    delete query.endDate;
   }
 
-  Object.entries(req.query).forEach(([param, value]) => {
+  Object.entries(query).forEach(([param, value]) => {
     if (value !== '') options[param] = value;
   });
 
-  Entry.find(options).sort('date').exec((err, entries) => {
+  Entry.find(options).sort('date').exec(callback);
+}
+
+router.get('/viewdata', adminRequired, (req, res, next) => {
+  filterData(req.query, (err, entries) => {
+    if (err) return next(createError(500, err));
+    res.render('admin', {
+      course: process.env.CMULAB_COURSE,
+      loc: process.env.CMULAB_LOC,
+      isData: true,
+      isDataView: true,
+      entries,
+      version: version(),
+    });
+  });
+});
+
+router.get('/getcsv', adminRequired, (req, res, next) => {
+  filterData(req.query, (err, entries) => {
     if (err) return next(createError(500, err));
     res.setHeader('Content-Type', 'text/csv');
     res.write(json2csv(entries, {

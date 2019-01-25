@@ -27,6 +27,9 @@ app.engine('hbs', hbs({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, '/views/layouts/'),
   partialsDir: path.join(__dirname, '/views/partials/'),
+  helpers: {
+    trim: str => str.toString().slice(0, str.toString().indexOf(' GMT-')),
+  },
 }));
 app.set('view engine', 'hbs');
 
