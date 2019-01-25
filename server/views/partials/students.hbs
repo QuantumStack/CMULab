@@ -1,0 +1,75 @@
+<article class="message is-info">
+	<div class="message-body">
+		View data for students based on lab check-ins. The section listed in the table is based on recorded data. You can upload a CSV with the header <code>_id,section</code> to set student section registration.
+	</div>
+</article>
+
+<form method="POST" action="/admin/enrollstudents" target="_self">
+	<label class="label">Upload section registrations: {{> asterisk}}</label>
+	<div class="field is-grouped">
+		<div class="control">
+			<div class="file has-name">
+				<label class="file-label">
+					<input id="file" class="file-input" type="file" />
+					<input id="csv" type="hidden" name="data" />
+					<span class="file-cta">
+						<span class="file-label">
+							Choose a file…
+						</span>
+					</span>
+					<span id="filename" class="file-name">
+						Nothing selected
+					</span>
+				</label>
+			</div>
+		</div>
+		<div class="control">
+			<input type="submit" class="button is-info" value="Submit"></input>
+		</div>
+	</div>
+</form>
+
+<script>
+var file = document.getElementById("file");
+file.onchange = function() {
+    if (file.files.length > 0) {
+		document.getElementById("filename").innerHTML = file.files[0].name;
+
+		var reader = new FileReader();
+		reader.onload = (function() {
+			return function(e) {
+				document.getElementById("csv").value = e.target.result.trim();
+			};
+		})(file.files[0]);
+
+		reader.readAsText(file.files[0]);
+    }
+};
+</script>
+
+<br />
+
+<table class="table is-hoverable is-fullwidth">
+	<thead>
+		<tr>
+			<th>Student ID</th>
+			<th>Section</th>
+			<th>Avg. Score</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each students}}
+			<tr>
+				<td>
+					{{this._id}}
+				</td>
+				<td>
+					{{freqreduce this.section}}
+				</td>
+				<td>
+					{{round this.avgscore}}
+				</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

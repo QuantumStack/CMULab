@@ -5,31 +5,16 @@
 </article>
 
 <form method="POST" action="/admin/delete" target="_self">
-	<div class="field is-horizontal">
-	<div class="field-body">
-		<div class="field">
-			<label class="label">Start Date:</label>
-			<div class="control">
-				<input class="input" name="startDate" type="text" placeholder="Example: 2019-01-20">
-			</div>
-		</div>
-		<div class="field">
-			<label class="label">End Date:</label>
-			<div class="control">
-				<input class="input" name="endDate" type="text" placeholder="Example: 2019-01-21">
-			</div>
+	{{> filters}}
+	<div class="field">
+		<label class="checkbox">
+			<input type="checkbox" required />
+			I am permanently deleting potentially valuable data {{> asterisk}}
+		</label>
+	</div>
+	<div class="field">
+		<div class="control">
+			<input type="submit" class="button is-danger" value="Delete"></input>
 		</div>
 	</div>
-</div>
-<div class="field">
-	<label class="checkbox">
-		<input type="checkbox" required />
-		I am permanently deleting potentially valuable data {{> asterisk}}
-	</label>
-</div>
-<div class="field">
-	<div class="control">
-		<input type="submit" class="button is-danger" value="Delete"></input>
-	</div>
-</div>
 </form>

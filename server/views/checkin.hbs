@@ -10,23 +10,51 @@
 					<h6 class="subtitle is-5">Student: {{student}}</h6>
 
 					<form method="post" action="/checkin/{{student}}">
-						{{!-- <div class="field">
-							<label class="label">Lab</label>
-							<div class="control">
-								<input class="input" name="lab" type="number" placeholder="Example: 12">
+						{{#if lab}}
+							<div class="field">
+								<label class="label">Lab</label>
+								<div class="control">
+									<input class="input" name="lab" type="number" placeholder="Example: 12">
+								</div>
 							</div>
-						</div> --}}
+						{{/if}}
 						<div class="field">
 							<label class="label">Section: {{> asterisk}}</label>
 							<div class="control">
-								<input class="input" name="section" type="text" placeholder="Example: A" required>
+								<input class="input" name="section" type="text" placeholder="Example: A" value="{{#if section}}{{section}}{{/if}}" required>
 							</div>
 						</div>
 						<div class="field">
 							<label class="label">Score: {{> asterisk}}</label>
-							<div class="control">
-								<input class="input" name="score" type="number" placeholder="Example: 3" min="0" max="{{maxscore}}" required>
-							</div>
+							{{#if radio}}
+								<input id="score" class="is-hidden" name="score" type="number" required />
+								<div class="columns is-multiline is-mobile">
+									{{#each (range maxscore)}}
+										<div class="column is-3">
+											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-outlined is-large score-button">
+												{{this}}
+											</a>
+										</div>
+									{{/each}}
+								</div>
+								<script>
+								function setScore(n) {
+									resetScore();
+									document.getElementById("score-" + n).className = "button is-fullwidth is-dark is-large score-button";
+									document.getElementById("score").value = n;
+								}
+								function resetScore() {
+									var btns = document.getElementsByClassName("score-button");
+									for (var i = 0; i < btns.length; i++) {
+										btns[i].className = "button is-fullwidth is-outlined is-large score-button";
+									}
+								}
+								</script>
+							{{else}}
+								<div class="control">
+									<input class="input" name="score" type="number" placeholder="Example: 3" min="0" max="{{maxscore}}" required>
+								</div>
+							{{/if}}
 						</div>
 						<div class="field">
 							<div class="control">

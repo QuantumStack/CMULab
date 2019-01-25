@@ -29,6 +29,17 @@ app.engine('hbs', hbs({
   partialsDir: path.join(__dirname, '/views/partials/'),
   helpers: {
     trim: str => str.toString().slice(0, str.toString().indexOf(' GMT-')),
+    round: n => Math.round(n * 100) / 100,
+    freqreduce: (arr) => {
+      const freqs = {};
+      arr.forEach((item) => {
+        if (!freqs[item]) freqs[item] = 0;
+        freqs[item] += 1;
+      });
+      return Object.entries(freqs).sort((a, b) => b[1] - a[1])
+        .map(([item]) => item).join(', ');
+    },
+    range: n => [...Array(n + 1).keys()],
   },
 }));
 app.set('view engine', 'hbs');

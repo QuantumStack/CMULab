@@ -1,8 +1,10 @@
 const express = require('express');
 const createError = require('http-errors');
 const json2csv = require('json2csv').parse;
+const csv2json = require('csvtojson');
 const User = require('./../models/User');
 const Entry = require('./../models/Entry');
+const Student = require('./../models/Student');
 const adminRequired = require('./../util/adminRequired');
 const version = require('./../util/version');
 
@@ -53,8 +55,31 @@ router.get('/users', adminRequired, (req, res, next) => {
   });
 });
 
+router.get('/students', adminRequired, (req, res, next) => {
+  Entry.aggregate([{
+    $group: {
+      _id: '$student_id',
+      section: {
+        $push: '$section',
+      },
+      avgscore: {
+        $avg: '$score',
+      },
+    },
+  }]).sort('_id').exec((err, students) => {
+    if (err) return next(createError(500, err));
+    res.render('admin', {
+      course: process.env.CMULAB_COURSE,
+      loc: process.env.CMULAB_LOC,
+      isStudents: true,
+      students,
+      version: version(),
+    });
+  });
+});
+
 /* GET data */
-function filterData(query, callback) {
+function filterData(query) {
   const options = {};
   const { startDate, endDate } = query;
   if (startDate && endDate) {
@@ -70,11 +95,11 @@ function filterData(query, callback) {
     if (value !== '') options[param] = value;
   });
 
-  Entry.find(options).sort('date').exec(callback);
+  return options;
 }
 
 router.get('/viewdata', adminRequired, (req, res, next) => {
-  filterData(req.query, (err, entries) => {
+  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.render('admin', {
       course: process.env.CMULAB_COURSE,
@@ -88,7 +113,7 @@ router.get('/viewdata', adminRequired, (req, res, next) => {
 });
 
 router.get('/getcsv', adminRequired, (req, res, next) => {
-  filterData(req.query, (err, entries) => {
+  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.setHeader('Content-Type', 'text/csv');
     res.write(json2csv(entries, {
@@ -101,15 +126,7 @@ router.get('/getcsv', adminRequired, (req, res, next) => {
 
 /* POST delete data */
 router.post('/delete', adminRequired, (req, res, next) => {
-  const options = {};
-  const { startDate, endDate } = req.body;
-  if (startDate && endDate) {
-    options.date = {
-      $gte: new Date(startDate),
-      $lt: new Date(endDate),
-    };
-  }
-  Entry.deleteMany(options).exec((err) => {
+  Entry.deleteMany(filterData(req.body)).exec((err) => {
     if (err) return next(createError(500, err));
     return res.redirect('/admin/delete');
   });
@@ -163,6 +180,26 @@ router.post('/removeuser', adminRequired, (req, res, next) => {
     if (err) return next(createError(500, err));
     return res.redirect('/admin/users');
   });
+});
+
+/* POST enroll students */
+router.post('/enrollstudents', adminRequired, (req, res, next) => {
+  csv2json().fromString(req.body.data).then((json) => {
+    function iterItems(i, err) {
+      if (err) return next(createError(500, err));
+      if (i === json.length) return res.redirect('/admin/students');
+
+      const item = json[i];
+      Student.findOneAndUpdate({
+        _id: item._id,
+      }, item, { upsert: true }, (updateErr) => {
+        i += 1;
+        if (updateErr) return iterItems(i, updateErr);
+        return iterItems(i);
+      });
+    }
+    iterItems(0);
+  }).catch(err => next(createError(400, err)));
 });
 
 module.exports = router;
