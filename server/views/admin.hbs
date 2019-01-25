@@ -1,6 +1,22 @@
 <br />
 <center><a href="/" class="tag is-primary is-large is-rounded">CMULab</a> &nbsp;<span class="title is-5"> {{course}}</span></center>
-<br />
+
+{{#if version.update}}
+	<section class="section">
+		<div class="container">
+			<article class="message is-warning">
+				<div class="message-header">
+					<p>CMULab Update Available!</p>
+				</div>
+				<div class="message-body">
+					QuantumStack has released a <strong>new version</strong> of CMULab. You are currently using {{version.current}}, but <strong>{{version.latest}}</strong> is now available. Please visit our <a href="https://github.com/QuantumStack/CMULab">GitHub repository</a> to download the update and deploy it onto your CMULab instance. Go to the <a href="https://github.com/QuantumStack/CMULab/releases/tag/{{version.latest}}">release page</a> to see what's new.
+				</div>
+			</article>
+		</div>
+	</section>
+{{else}}
+	<br />
+{{/if}}
 
 <div class="tabs is-centered is-boxed is-small">
 	<ul>

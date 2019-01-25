@@ -4,6 +4,7 @@ const json2csv = require('json2csv').parse;
 const User = require('./../models/User');
 const Entry = require('./../models/Entry');
 const adminRequired = require('./../util/adminRequired');
+const version = require('./../util/version');
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.get('/lab', adminRequired, (req, res) => {
     course: process.env.CMULAB_COURSE,
     loc: process.env.CMULAB_LOC,
     isLab: true,
+    version: version(),
   });
 });
 
@@ -25,6 +27,7 @@ router.get('/csv', adminRequired, (req, res) => {
     course: process.env.CMULAB_COURSE,
     loc: process.env.CMULAB_LOC,
     isCsv: true,
+    version: version(),
   });
 });
 
@@ -33,6 +36,7 @@ router.get('/delete', adminRequired, (req, res) => {
     course: process.env.CMULAB_COURSE,
     loc: process.env.CMULAB_LOC,
     isDelete: true,
+    version: version(),
   });
 });
 
@@ -44,6 +48,7 @@ router.get('/users', adminRequired, (req, res, next) => {
       loc: process.env.CMULAB_LOC,
       isUsers: true,
       users,
+      version: version(),
     });
   });
 });
