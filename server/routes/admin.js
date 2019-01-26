@@ -21,6 +21,7 @@ router.get('/lab', adminRequired, (req, res) => {
     loc: process.env.CMULAB_LOC,
     isLab: true,
     version: version(),
+    success: req.query.success,
   });
 });
 
@@ -30,6 +31,7 @@ router.get('/data', adminRequired, (req, res) => {
     loc: process.env.CMULAB_LOC,
     isData: true,
     version: version(),
+    success: req.query.success,
   });
 });
 
@@ -40,6 +42,7 @@ router.get('/delete', adminRequired, (req, res) => {
     isData: true,
     isDataDelete: true,
     version: version(),
+    success: req.query.success,
   });
 });
 
@@ -49,9 +52,10 @@ router.get('/users', adminRequired, (req, res, next) => {
     res.render('admin', {
       course: process.env.CMULAB_COURSE,
       loc: process.env.CMULAB_LOC,
-      isUsers: true,
+      isPeople: true,
       users,
       version: version(),
+      success: req.query.success,
     });
   });
 });
@@ -72,9 +76,11 @@ router.get('/students', adminRequired, (req, res, next) => {
     res.render('admin', {
       course: process.env.CMULAB_COURSE,
       loc: process.env.CMULAB_LOC,
-      isStudents: true,
+      isPeople: true,
+      isPeopleStudents: true,
       students,
       version: version(),
+      success: req.query.success,
     });
   });
 });
@@ -109,6 +115,7 @@ router.get('/viewdata', adminRequired, (req, res, next) => {
       isDataView: true,
       entries,
       version: version(),
+      success: req.query.success,
     });
   });
 });
@@ -129,7 +136,7 @@ router.get('/getcsv', adminRequired, (req, res, next) => {
 router.post('/delete', adminRequired, (req, res, next) => {
   Entry.deleteMany(filterData(req.body)).exec((err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/delete');
+    return res.redirect('/admin/delete?success=delete');
   });
 });
 
@@ -149,7 +156,7 @@ router.post('/assignlab', adminRequired, (req, res, next) => {
     lab,
   }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/lab');
+    return res.redirect('/admin/lab?success=lab+assign');
   });
 });
 
@@ -165,7 +172,7 @@ router.post('/adduser', adminRequired, (req, res, next) => {
       admin: admin === 'on',
     }, (saveErr) => {
       if (saveErr) return next(createError(500, saveErr));
-      return res.redirect('/admin/users');
+      return res.redirect('/admin/users?success=user+add');
     });
   });
 });
@@ -179,7 +186,7 @@ router.post('/removeuser', adminRequired, (req, res, next) => {
   }
   User.remove({ _id: student_id }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/users');
+    return res.redirect('/admin/users?success=user+delete');
   });
 });
 
@@ -188,7 +195,9 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
   csv2json().fromString(req.body.data).then((json) => {
     function iterItems(i, err) {
       if (err) return next(createError(500, err));
-      if (i === json.length) return res.redirect('/admin/students');
+      if (i === json.length) {
+        return res.redirect('/admin/students?success=student+registration');
+      }
 
       const item = json[i];
       Student.findOneAndUpdate({
@@ -207,7 +216,7 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
 router.post('/removestudents', adminRequired, (req, res, next) => {
   Student.deleteMany({}).exec((err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/students');
+    return res.redirect('/admin/students?success=student+registration+delete');
   });
 });
 

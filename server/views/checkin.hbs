@@ -4,10 +4,15 @@
 			<div class="columns">
 				<div class="column is-4 is-offset-4">
 					<p class="is-pulled-right">
-						<a href="/" class="tag is-primary is-large is-rounded">CMULab</a>
+						<a href="/" class="tag is-primary is-large is-rounded cmulab">CMULab</a>
 					</p>
 					<h3 class="title is-5">{{course}} Check-in</h3>
-					<h6 class="subtitle is-5">Student: {{student}}</h6>
+					<h6 class="subtitle is-6">
+						<span class="icon is-small">
+							<i class="fa fa-user"></i>
+				    	</span>
+						<span>Student: {{student}}</span>
+					</h6>
 
 					<form method="post" action="/checkin/{{student}}">
 						{{#if lab}}
@@ -58,7 +63,12 @@
 						</div>
 						<div class="field">
 							<div class="control">
-								<input type="submit" class="button is-info is-fullwidth" value="Submit Score!"></input>
+								<button type="submit" class="button is-info is-fullwidth">
+									<span class="icon">
+										<i class="fa fa-check"></i>
+							    	</span>
+									<span>Submit!</span>
+								</button>
 							</div>
 						</div>
 					</form>

@@ -40,7 +40,7 @@ router.post('/:student_id', authRequired, (req, res, next) => {
     ta: req.user._id,
   }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/success');
+    return res.redirect('/?success=check-in');
   });
 });
 

@@ -5,13 +5,18 @@
 </article>
 
 <form method="POST" action="/admin/adduser" target="_self">
-	<label class="label">Student ID: {{> asterisk}}</label>
+	<label class="label">User ID: {{> asterisk}}</label>
 	<div class="field is-grouped">
 		<div class="control is-expanded">
 			<input class="input" name="student_id" type="text" placeholder="Example: iliano" required>
 		</div>
 		<div class="control">
-			<input type="submit" class="button is-info" value="Add"></input>
+			<button type="submit" class="button is-info">
+				<span class="icon">
+					<i class="fa fa-plus"></i>
+		    	</span>
+				<span>Add</span>
+			</button>
 		</div>
 	</div>
 	<div class="field">
@@ -46,7 +51,11 @@
 				<td>
 					<form method="POST" action="/admin/removeuser" target="_self">
 						<input type="hidden" name="student_id" value="{{this._id}}" />
-						<input type="submit" class="button is-small is-danger" value="Remove"></input>
+						<button type="submit" class="button is-small is-danger" title="Remove">
+							<span class="icon is-small">
+								<i class="fa fa-trash"></i>
+					    	</span>
+						</button>
 					</form>
 				</td>
 			</tr>

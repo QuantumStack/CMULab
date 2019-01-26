@@ -1,10 +1,26 @@
 <section class="hero is-black is-bold is-fullheight">
+	{{#if success}}
+		<div id="success" class="hero-head">
+			<div class="container">
+				<br />
+				<p class="has-text-centered">
+					<span class="has-text-success">
+						<span class="icon">
+							<i class="fa fa-thumbs-up"></i>
+				    	</span>
+				    	<strong>Successful {{success}}!</strong>
+			    	</span>
+				</p>
+			</div>
+		</div>
+		{{> success}}
+	{{/if}}
 	<div class="hero-body">
 		<div class="container">
 			<div class="columns">
 				<div class="column is-4 is-offset-4">
 					<p>
-		      			<center><a href="https://cmulab.quantumstack.xyz" class="tag is-primary is-large is-rounded">CMULab</a> &nbsp;<span class="title is-4"> for {{course}}</span></center>
+		      			<center><a href="https://cmulab.quantumstack.xyz" class="tag is-primary is-large is-rounded cmulab">CMULab</a> &nbsp;<span class="title is-4"> for {{course}}</span></center>
 		  			</p>
 		  			<br />
 		  			<p class="subtitle is-5 has-text-centered">
@@ -12,8 +28,11 @@
 		  			</p>
 		  			<form method="POST" action="/go">
 			  			<div class="field is-grouped">
-							<p class="control is-expanded">
+							<p class="control is-expanded has-icons-left">
 								<input class="input" type="text" name="student_id" placeholder="Check-in student ID">
+								<span class="icon is-left">
+									<i class="fa fa-rocket"></i>
+						    	</span>
 							</p>
 							<p class="control">
 								<input type="submit" class="button is-info is-outlined" value="Go"></input>
@@ -21,7 +40,14 @@
 						</div>
 					</form>
 					<br />
-					<p class="has-text-centered has-text-grey"><a href="/admin"><small>Admin Console</small></a></p>
+					<p class="has-text-centered has-text-grey">
+						<a href="/admin">
+							<small>Admin Console</small>
+							<span class="icon">
+								<i class="fa fa-lock"></i>
+					    	</span>
+						</a>
+					</p>
 	  			</div>
   			</div>
 		</div>

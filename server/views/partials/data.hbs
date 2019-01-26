@@ -8,10 +8,20 @@
 	{{> filters}}
 	<div class="field is-grouped">
 		<div class="control">
-			<input formaction="/admin/viewdata" type="submit" class="button is-info" value="View Data"></input>
+			<button formaction="/admin/viewdata" type="submit" class="button is-info">
+				<span class="icon">
+					<i class="fa fa-table"></i>
+		    	</span>
+				<span>View Data</span>
+			</button>
 		</div>
 		<div class="control">
-			<input formaction="/admin/getcsv" type="submit" class="button" value="Get CSV"></input>
+			<button formaction="/admin/getcsv" type="submit" class="button">
+				<span class="icon">
+					<i class="fa fa-download"></i>
+		    	</span>
+				<span>Get CSV</span>
+			</button>
 		</div>
 	</div>
 </form>
