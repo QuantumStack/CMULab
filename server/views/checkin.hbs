@@ -35,7 +35,7 @@
 								<input id="score" class="is-hidden" name="score" type="number" required />
 								<div class="columns is-multiline is-mobile">
 									{{#each (range minscore maxscore)}}
-										<div class="column is-3">
+										<div class="column">
 											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-outlined is-large score-button">
 												{{this}}
 											</a>
