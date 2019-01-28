@@ -28,7 +28,7 @@ app.engine('hbs', hbs({
   layoutsDir: path.join(__dirname, '/views/layouts/'),
   partialsDir: path.join(__dirname, '/views/partials/'),
   helpers: {
-    trim: str => str.toString().slice(0, str.toString().indexOf(' GMT-')),
+    trim: str => str.toString().slice(0, str.toString().indexOf(' (UTC')),
     round: n => Math.round(n * 100) / 100,
     freqreduce: (arr) => {
       const freqs = {};
