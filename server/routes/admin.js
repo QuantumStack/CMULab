@@ -106,7 +106,7 @@ function filterData(query) {
 }
 
 router.get('/viewdata', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
+  Entry.find(filterData(req.query)).sort({ date: -1 }).exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.render('admin', {
       course: process.env.CMULAB_COURSE,
