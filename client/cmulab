@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 
 export CMULAB_COURSE="" # insert course number here
 export CMULAB_LOC="" # insert hosting URL here (without trailing /)
+export DISPLAY=:0.0
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
