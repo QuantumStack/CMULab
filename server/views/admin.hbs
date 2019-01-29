@@ -1,3 +1,5 @@
+<script src="/javascripts/bulma-calendar.min.js"></script>
+
 {{#if success}}
 	<nav id="success" class="navbar is-success">
 		<div class="container">
@@ -147,3 +149,13 @@
 		{{> footer }}
 	</p>
 </div>
+
+<script>
+var calendars = bulmaCalendar.attach('[type="date"]', {
+	showHeader: false,
+	showFooter: false,
+	todayButton: false,
+	clearButton: false,
+	dateFormat: "YYYY-MM-DD",
+});
+</script>
