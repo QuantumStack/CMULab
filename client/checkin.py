@@ -1,14 +1,14 @@
 import pyqrcode
 import getpass
 import sys
-from pathlib import Path
+import os
 import random
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-home = str(Path.home()) + "/" 
+home = os.path.expanduser('~') + "/" 
 
 def main():
     # Get the student ID of the user from their user directory
