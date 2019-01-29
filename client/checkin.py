@@ -18,7 +18,8 @@ def main():
     url_str = (url + '/checkin/' + student_id + '/')
 
     # Create QR code
-    url = pyqrcode.create(url_str, error='L')
+    url = pyqrcode.create(url_str, error='H')
+    url.show()
 
     # Print QR Code
     print(url.terminal(quiet_zone=1))
