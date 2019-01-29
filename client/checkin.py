@@ -11,14 +11,14 @@ def main():
     course = sys.argv[1]
     url = sys.argv[2]
 
-    print("Student ID: " + student_d + " (" + course + ")")
+    print("Student ID: " + student_id + " (" + course + ")")
     print("Check-in ID: " + str(random.randint(100000, 999999)))
 
     # Build URL string for QR
     url_str = (url + '/checkin/' + student_id + '/')
 
     # Create QR code
-    url = pyqrcode.create(url_str)
+    url = pyqrcode.create(url_str, error='L')
 
     # Print QR Code
     print(url.terminal(quiet_zone=1))
