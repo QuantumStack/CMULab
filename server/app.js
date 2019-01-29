@@ -68,6 +68,7 @@ passport.use(new GoogleStrategy({
   clientID: process.env.CMULAB_GOOGLE_ID,
   clientSecret: process.env.CMULAB_GOOGLE_SECRET,
   callbackURL: `${process.env.CMULAB_LOC}/login/callback`,
+  userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 }, (token, tokenSecret, profile, done) => {
   const email = profile.emails[0].value;
   if (!email.endsWith(`@${process.env.CMULAB_EMAILDOMAIN}`)) {
