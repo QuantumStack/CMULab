@@ -25,20 +25,20 @@ def main():
     url_str = (url + '/checkin/' + student_id + '/')
 
     # Create QR code
-    url = pyqrcode.create(url_str, error='L')
+    url = pyqrcode.create(url_str, error='H')
 
     # Create PNG
     url.png(home + course + 'code.png', scale=5, module_color="#000000", background="#FFFFFF")
 
     # Create Image
     img=mpimg.imread(home + course + 'code.png')
-    imgplot = plt.imshow(img)
+    imgplot = plt.imshow(img, cmap="binary")
     plt.show()
 
 
     
     # Print QR Code
-    print(url.terminal(quiet_zone=1, module_color="black", background="white"))
+    # print(url.terminal(quiet_zone=1, module_color="black", background="white"))
 
 if __name__ == "__main__":
     main()
