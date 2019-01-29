@@ -3,12 +3,12 @@
 # Change directory to the directory of the script
 cd "$(dirname "$0")"
 
-export CMULAB_COURSE="" # insert course number here
-export CMULAB_LOC="" # insert hosting URL here (without trailing /)
-export DISPLAY=:0.0
+export CMULAB_COURSE="15122" # insert course number here
+export CMULAB_LOC="https://15122.cmulab.quantumstack.xyz" # insert hosting URL here (without trailing /)
+
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Darwin*)    ./checkin_mac $CMULAB_COURSE $CMULAB_LOC;;
     *)          ./checkin_gnu $CMULAB_COURSE $CMULAB_LOC;;
-esac
+  esac
