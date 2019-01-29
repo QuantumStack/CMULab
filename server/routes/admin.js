@@ -2,6 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const json2csv = require('json2csv').parse;
 const csv2json = require('csvtojson');
+const config = require('./../util/config');
 const User = require('./../models/User');
 const Entry = require('./../models/Entry');
 const Student = require('./../models/Student');
@@ -10,6 +11,14 @@ const version = require('./../util/version');
 
 const router = express.Router();
 
+function appData() {
+  return {
+    course: config.get('course'),
+    loc: process.env.CMULAB_LOC,
+    version: version(),
+  };
+}
+
 /* GET admin console */
 router.get('/', adminRequired, (req, res) => {
   res.redirect('/admin/lab');
@@ -17,32 +26,26 @@ router.get('/', adminRequired, (req, res) => {
 
 router.get('/lab', adminRequired, (req, res) => {
   res.render('admin', {
-    course: process.env.CMULAB_COURSE,
-    loc: process.env.CMULAB_LOC,
     isLab: true,
-    version: version(),
     success: req.query.success,
+    ...appData(),
   });
 });
 
 router.get('/data', adminRequired, (req, res) => {
   res.render('admin', {
-    course: process.env.CMULAB_COURSE,
-    loc: process.env.CMULAB_LOC,
     isData: true,
-    version: version(),
     success: req.query.success,
+    ...appData(),
   });
 });
 
 router.get('/delete', adminRequired, (req, res) => {
   res.render('admin', {
-    course: process.env.CMULAB_COURSE,
-    loc: process.env.CMULAB_LOC,
     isData: true,
     isDataDelete: true,
-    version: version(),
     success: req.query.success,
+    ...appData(),
   });
 });
 
@@ -50,12 +53,10 @@ router.get('/users', adminRequired, (req, res, next) => {
   User.find().sort('_id').exec((err, users) => {
     if (err) return next(createError(500, err));
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
       isPeople: true,
       users,
-      version: version(),
       success: req.query.success,
+      ...appData(),
     });
   });
 });
@@ -74,13 +75,11 @@ router.get('/students', adminRequired, (req, res, next) => {
   }]).sort('_id').exec((err, students) => {
     if (err) return next(createError(500, err));
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
       isPeople: true,
       isPeopleStudents: true,
       students,
-      version: version(),
       success: req.query.success,
+      ...appData(),
     });
   });
 });
@@ -109,19 +108,17 @@ router.get('/viewdata', adminRequired, (req, res, next) => {
   Entry.find(filterData(req.query)).sort({ date: -1 }).exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
       isData: true,
       isDataView: true,
       entries,
-      version: version(),
       success: req.query.success,
+      ...appData(),
     });
   });
 });
 
 router.get('/getcsv', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
+  Entry.find(filterData(req.query)).sort({ date: -1 }).exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.setHeader('Content-Type', 'text/csv');
     res.write(json2csv(entries, {

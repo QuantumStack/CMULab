@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const config = require('./../util/config');
 
 const entrySchema = new mongoose.Schema({
   student_id: { type: String, required: true },
@@ -8,10 +9,11 @@ const entrySchema = new mongoose.Schema({
   score: {
     type: Number,
     required: true,
-    min: process.env.CMULAB_MINSCORE,
-    max: process.env.CMULAB_MAXSCORE,
+    min: config.get('minScore'),
+    max: config.get('maxScore'),
   },
   ta: { type: String, required: true },
+  flag: [{ type: String, enum: ['ghost', 'attempt', 'score'], required: true }],
 });
 
 module.exports = mongoose.model('Entry', entrySchema);

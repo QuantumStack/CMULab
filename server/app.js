@@ -11,6 +11,7 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
 
+const config = require('./util/config');
 const User = require('./models/User');
 const indexRouter = require('./routes/index');
 const checkinRouter = require('./routes/checkin');
@@ -71,7 +72,7 @@ passport.use(new GoogleStrategy({
   userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 }, (token, tokenSecret, profile, done) => {
   const email = profile.emails[0].value;
-  if (!email.endsWith(`@${process.env.CMULAB_EMAILDOMAIN}`)) {
+  if (!email.endsWith(`@${config.get('emailDomain')}`)) {
     return done('Not a university user');
   }
   const student_id = email.slice(0, email.lastIndexOf('@'));
@@ -114,7 +115,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(err.status || 500);
   res.render('error', {
-    course: process.env.CMULAB_COURSE,
+    course: config.get('course'),
     loc: process.env.CMULAB_LOC,
     err,
   });
