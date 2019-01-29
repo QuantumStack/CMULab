@@ -35,6 +35,8 @@ def main():
     imgplot = plt.imshow(img, cmap="binary")
     plt.show()
 
+    # Delete the image
+    os.remove(home + course + 'code.png')
 
     
     # Print QR Code
