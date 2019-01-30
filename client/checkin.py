@@ -29,7 +29,7 @@ def main():
     url = pyqrcode.create(url_str, error='H')
 
     # Save high error correcting QR Code as a PNG for bash script to open
-    url.png(home + "." + course + 'cmulab.png', scale=6, 
+    url.png(home + "." + course + 'cmulab.png', scale=12, 
         module_color=[0, 0, 0, 255], background=[0xff, 0xff, 0xff])
 
 
