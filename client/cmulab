@@ -16,7 +16,9 @@ CMULAB_QRCODE_LOC="${HOME}/.${CMULAB_COURSE}cmulab.png"
 # Create the QR Code
 unameOut="$(uname -s)"
 case "${unameOut}" in
-    Darwin*)    ./checkin_mac $CMULAB_COURSE $CMULAB_LOC;;
+    Darwin*)    ./checkin_mac $CMULAB_COURSE $CMULAB_LOC
+                open ${CMULAB_QRCODE_LOC}
+                exit;;
     *)          ./checkin_gnu $CMULAB_COURSE $CMULAB_LOC;;
 esac
 
