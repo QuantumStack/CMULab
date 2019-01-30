@@ -23,7 +23,7 @@ esac
 # Display the QR Code if possible
 if xset q &>/dev/null; then
   display ${CMULAB_QRCODE_LOC}
-elif ![ -n "$SSH_CLIENT" ] && ![ -n "$SSH_TTY" ]; then
+elif ! [ -n "$SSH_CLIENT" ] && ! [ -n "$SSH_TTY" ]; then
   display ${CMULAB_QRCODE_LOC}
 fi
 
