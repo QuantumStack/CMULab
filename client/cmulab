@@ -25,10 +25,10 @@ esac
 # Display the QR Code if possible
 if xset q &>/dev/null; then
   echo "Opening QR Code, please wait."
-  display ${CMULAB_QRCODE_LOC}
+  display ${CMULAB_QRCODE_LOC} &
 elif ! [ -n "$SSH_CLIENT" ] && ! [ -n "$SSH_TTY" ]; then
   echo "Opening QR Code, please wait."
-  display ${CMULAB_QRCODE_LOC}
+  display ${CMULAB_QRCODE_LOC} &
 fi
 
 # Otherwise, they're probably on Windows without an Xserver...
