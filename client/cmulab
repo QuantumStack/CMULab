@@ -10,7 +10,7 @@ CMULAB_LOC="" # insert hosting URL here (without trailing /)
 
 
 # Generate location for QR Code
-CMULAB_QRCODE_LOC="${HOME}/.${CMULAB_COURSE}code.png"
+CMULAB_QRCODE_LOC="${HOME}/.${CMULAB_COURSE}cmulab.png"
 
 
 # Create the QR Code
@@ -29,4 +29,5 @@ fi
 
 # Otherwise, they're probably on Windows without an Xserver...
 # We just have to exit and deal with a lower error-correcting code...
+rm ${CMULAB_QRCODE_LOC}
 
