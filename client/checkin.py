@@ -1,14 +1,9 @@
 import pyqrcode
 import getpass
-import sys
-import os
+import sys, os
 import random
-import matplotlib
-matplotlib.use("TkAgg")
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
-home = os.path.expanduser('~') + "/" 
+home = os.path.expanduser('~/') 
 
 def main():
     # Get the student ID of the user from their user directory
@@ -24,25 +19,20 @@ def main():
     # Build URL string for QR
     url_str = (url + '/checkin/' + student_id + '/')
 
-    # Create QR code
+    # Create a Low Error Correcting QR code
+    url = pyqrcode.create(url_str, error='L')
+
+    # Print the low error correcting QR code to terminal
+    print(url.terminal(quiet_zone=1, module_color='black', background='white'))
+
+    # Create a high error correcting QR code
     url = pyqrcode.create(url_str, error='H')
 
-    # Create PNG
-    url.png(home + course + 'code.png', scale=5, module_color="#000000", background="#FFFFFF")
+    # Save high error correcting QR Code as a PNG for bash script to open
+    url.png(home + "." + course + 'cmulab.png', scale=9, 
+        module_color=[0, 0, 0, 255], background=[0xff, 0xff, 0xff])
 
-    # Create Image
-    img=mpimg.imread(home + course + 'code.png')
-    imgplot = plt.imshow(img, cmap="binary")
-    plt.show()
-
-    # Delete the image
-    os.remove(home + course + 'code.png')
-
-    
-    # Print QR Code
-    # print(url.terminal(quiet_zone=1, module_color="black", background="white"))
 
 if __name__ == "__main__":
     main()
-
 
