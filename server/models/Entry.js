@@ -11,14 +11,13 @@ const entrySchema = new mongoose.Schema({
   },
   ta: { type: String, required: true },
   good: { type: Boolean, default: true },
-  flag: {
+  flags: {
     ghost: { type: Boolean },
-    attempt: {
-      diff: { type: Number },
-      section: { type: String, uppercase: true },
-      score: { type: Number },
-    },
-    section: { type: String, uppercase: true },
+    attempt: { type: Boolean },
+    attemptDiff: { type: Number },
+    attemptSection: { type: String, uppercase: true },
+    attemptScore: { type: Number },
+    section: { type: Boolean },
   },
 });
 

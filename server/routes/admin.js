@@ -90,12 +90,16 @@ router.get('/students', adminRequired, (req, res, next) => {
 });
 
 /* GET edit config */
-router.get('/config', adminRequired, (req, res) => {
-  res.render('admin', {
-    isConfig: true,
-    config: config.all(),
-    success: req.query.success,
-    ...appData(),
+router.get('/config', adminRequired, (req, res, next) => {
+  Student.count({}, (err, count) => {
+    if (err) return next(createError(500, err));
+    res.render('admin', {
+      isConfig: true,
+      config: config.all(),
+      studentsCount: count,
+      success: req.query.success,
+      ...appData(),
+    });
   });
 });
 
@@ -137,7 +141,16 @@ router.get('/getcsv', adminRequired, (req, res, next) => {
     if (err) return next(createError(500, err));
     res.setHeader('Content-Type', 'text/csv');
     res.write(json2csv(entries, {
-      fields: ['student_id', 'date', 'lab', 'section', 'score', 'ta'],
+      fields: [
+        'section',
+        'student_id',
+        'score',
+        'lab',
+        'date',
+        'ta',
+        'flags',
+        'good',
+      ],
       defaultValue: '',
     }));
     return res.end();
@@ -152,11 +165,22 @@ router.post('/delete', adminRequired, (req, res, next) => {
   });
 });
 
+/* POST mark entry */
+router.post('/togglegood', adminRequired, (req, res, next) => {
+  const { _id, good } = req.body;
+  if (!_id || good == null) {
+    return next(createError(400, 'Provide _id and good'));
+  }
+  Entry.update({ _id }, { $set: { good } }, (err) => {
+    if (err) return next(createError(500, err));
+    return res.send(200);
+  });
+});
 
 /* POST assign lab number */
 router.post('/assignlab', adminRequired, (req, res, next) => {
   const { startDate, endDate, lab } = req.body;
-  if (!startDate || !endDate || lab === null) {
+  if (!startDate || !endDate || lab == null) {
     return next(createError(400, 'Provide startDate, endDate, lab'));
   }
   Entry.updateMany({

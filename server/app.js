@@ -10,9 +10,9 @@ const session = require('express-session');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 const config = require('./util/config');
+const helpers = require('./util/helpers');
 const User = require('./models/User');
 const indexRouter = require('./routes/index');
 const checkinRouter = require('./routes/checkin');
@@ -29,30 +29,7 @@ app.engine('hbs', hbs({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, '/views/layouts/'),
   partialsDir: path.join(__dirname, '/views/partials/'),
-  helpers: {
-    trim: str => str.toString().slice(0, str.toString().indexOf(' (UTC')),
-    round: n => Math.round(n * 100) / 100,
-    freqreduce: (arr) => {
-      const freqs = {};
-      arr.forEach((item) => {
-        if (!freqs[item]) freqs[item] = 0;
-        freqs[item] += 1;
-      });
-      return Object.entries(freqs).sort((a, b) => b[1] - a[1])
-        .map(([item]) => item).join(', ');
-    },
-    range: (n, m) => {
-      const L = [];
-      for (let i = n; i <= m; i += 1) L.push(i);
-      return L;
-    },
-    isNonEmpty: obj => Object.keys(obj).length > 0,
-    toString: a => JSON.stringify(a),
-    prettyDiff: diff => moment.duration(diff).humanize(true),
-    prettyMs: ms => moment.duration(ms, 'ms').minutes(),
-    checked: val => (val ? 'checked' : ''),
-    selected: (val1, val2) => (val1 === val2 ? 'selected' : ''),
-  },
+  helpers,
 }));
 app.set('view engine', 'hbs');
 

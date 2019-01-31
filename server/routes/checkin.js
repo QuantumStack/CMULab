@@ -2,11 +2,24 @@ const express = require('express');
 const createError = require('http-errors');
 const moment = require('moment');
 const config = require('./../util/config');
+const convertDate = require('./../util/convertDate');
 const Entry = require('./../models/Entry');
 const Student = require('./../models/Student');
 const authRequired = require('./../util/authRequired');
 
 const router = express.Router();
+
+function parseSectionTime(data) {
+  const validStart = convertDate(moment({
+    hour: data.start_hour,
+    minute: data.start_minute,
+  }));
+  const validEnd = convertDate(moment({
+    hour: data.end_hour,
+    minute: data.end_minute,
+  }));
+  return [validStart, validEnd];
+}
 
 /* GET checkin form */
 router.get('/:student_id', authRequired, (req, res) => {
@@ -31,15 +44,14 @@ router.get('/:student_id', authRequired, (req, res) => {
 
     const now = Date.now();
 
-    if (!err && student) {
-      section = student.section;
-      if (section) {
+    if (!err) {
+      if (student) {
+        section = student.section;
         if (config.get('flagSection')) {
           const sections = config.get('sections');
           const validRange = sections[section];
           if (validRange) {
-            const validStart = moment(validRange.start).valueOf();
-            const validEnd = moment(validRange.end).valueOf();
+            const [validStart, validEnd] = parseSectionTime(validRange);
             if (now < validStart || now > validEnd) {
               flags.section = true;
             }
@@ -52,7 +64,7 @@ router.get('/:student_id', authRequired, (req, res) => {
 
     const flagAttempts = config.get('flagAttempts');
     if (flagAttempts) {
-      const today = moment().startOf('day').valueOf();
+      const today = convertDate(moment().startOf('day'));
       Entry.find({
         student_id,
         date: { $gte: today },
@@ -62,21 +74,21 @@ router.get('/:student_id', authRequired, (req, res) => {
             const diff = now - entry.date;
             if (flagAttempts === 'time') {
               if (diff > config.get('flagAttemptsThreshold')) {
-                flags.attempt = { diff, score: entry.score };
+                flags.attempt = true;
+                flags.attemptDiff = diff;
+                flags.attemptScore = entry.score;
                 return true;
               }
             } else if (flagAttempts === 'section') {
               const sections = config.get('sections');
               Object.values(sections).some((validRange) => {
-                const validStart = moment(validRange.start).valueOf();
-                const validEnd = moment(validRange.end).valueOf();
+                const [validStart, validEnd] = parseSectionTime(validRange);
                 if (validStart <= now && now <= validEnd) {
                   if (entry.date < validStart || entry.date > validEnd) {
-                    flags.attempt = {
-                      diff,
-                      section: entry.section,
-                      score: entry.score,
-                    };
+                    flags.attempt = true;
+                    flags.attemptDiff = diff;
+                    flags.attemptScore = entry.score;
+                    flags.attemptSection = entry.section;
                   }
                   return true;
                 }
@@ -107,10 +119,9 @@ router.post('/:student_id', authRequired, (req, res, next) => {
   let { student_id } = req.params;
   if (config.get('lowercaseStudents')) student_id = student_id.toLowerCase();
 
-  const today = moment().startOf('day').valueOf();
   Entry.update({
     student_id,
-    date: { $gte: today },
+    date: { $gte: convertDate(moment().startOf('day')) },
   }, {
     $set: { good: false },
   }, { multi: true }, (err) => {
@@ -125,7 +136,7 @@ router.post('/:student_id', authRequired, (req, res, next) => {
     };
     if (flags) {
       options.flags = JSON.parse(flags);
-      options.good = false;
+      if (config.get('flagInvalid')) options.good = false;
     }
     Entry.create(options, (createErr) => {
       if (createErr) return next(createError(500, createErr));

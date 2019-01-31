@@ -1,6 +1,6 @@
 <section class="hero is-light is-bold is-fullheight">
 	{{#if (isNonEmpty flags)}}
-		<div id="success" class="hero-head">
+		<div id="flags" class="hero-head">
 			<div class="container">
 				<br />
 				<p class="has-text-centered">
@@ -13,11 +13,13 @@
 				    			Student is not registered for {{course}}.
 			    			{{/if}}
 			    			{{#if flags.attempt}}
-			    				{{student}} was checked in {{prettyDiff flags.attempt.diff}} ago{{#if flags.attempt.section}} to section {{flags.attempt.section}}{{/if}} for {{flags.attempt.score}}.
+			    				{{student}} was checked in {{prettyDiff flags.attempt.diff}} ago{{#if flags.attempt.section}} to section {{flags.attempt.section}}{{/if}} for {{flags.attempt.score}} points.
 		    				{{/if}}
 				    		{{#if flags.section}}
-				    			This is wrong section for {{student}} (enrolled in {{section}}).
+				    			This is wrong section time for {{student}}.
 			    			{{/if}}
+			    			<u><a onclick="flagDismiss();">Dismiss</a></u>
+			    			<script src="/javascripts/flag-dismiss.js"></script>
 				    	</strong>
 			    	</span>
 				</p>

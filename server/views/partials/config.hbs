@@ -70,34 +70,14 @@
 	</div>
 	<div class="field">
 		<label class="label">Suspicious activity detection:</label>
-		<label class="checkbox">
-			<input type="hidden" name="flagGhosts" value="off">
-			<input type="checkbox" name="flagGhosts" {{checked config.flagGhosts}} />
-			Flag students who aren't registered to a section
-		</label>
-		<br />
-		<label class="checkbox">
-			<input type="hidden" name="flagSection" value="off">
-			<input id="section" type="checkbox" name="flagSection" {{checked config.flagSection}} onchange="toggleSectionWarn();" />
-			Warn when a student attends the wrong section time
-		</label>
-		<br />
-		<label class="checkbox">
-			<input type="hidden" name="flagAttempts" value="off">
-			<input id="attempts" type="checkbox" name="flagAttempts" {{checked config.flagAttempts}} onchange="toggleThreshold();toggleSectionWarn();" />
-			Flag multiple check-ins over a day
-			<span class="select is-small">
-				<select id="attempts-type" name="flagAttempts" onchange="toggleThreshold(null, this.value);">
-					<option value="section" {{selected config.flagAttempts "section"}}>based on section</option>
-					<option value="time" {{selected config.flagAttempts "time"}}>based on time</option>
-				</select>
-			</span>
-		</label>
-		<div class="field is-horizontal" id="attempts-threshold">
-			<span>Threshold:</span>
-			&nbsp;&nbsp;
-			<p class="control">
-				<input class="input is-small" type="text" value="{{prettyMs config.flagAttemptsThreshold}} minutes" placeholder="Example: 1 hour">
+		<div id="student-data">
+			<p class="help">
+				{{#if studentsCount}}
+					Update data for students and section registration
+				{{else}}
+					You have enabled a feature that requires data about students and section registration for {{course}}. Please upload this information
+				{{/if}}
+				on the <a href="/admin/students">students page</a>.
 			</p>
 		</div>
 		<div id="section-data">
@@ -130,6 +110,41 @@
 				</div>
 			</div>
 		</div>
+		<label class="checkbox">
+			<input type="hidden" name="flagGhosts" value="off">
+			<input id="ghosts" type="checkbox" name="flagGhosts" {{checked config.flagGhosts}} onchange="toggleStudentWarn();toggleFlagInvalid();" />
+			Flag students who aren't registered to a section
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="flagSection" value="off">
+			<input id="section" type="checkbox" name="flagSection" {{checked config.flagSection}} onchange="toggleStudentWarn();toggleSectionWarn();toggleFlagInvalid();" />
+			Warn when a student attends the wrong section time
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="flagAttempts" value="off">
+			<input id="attempts" type="checkbox" name="flagAttempts" {{checked config.flagAttempts}} onchange="toggleThreshold();toggleSectionWarn();toggleFlagInvalid();" />
+			Flag multiple check-ins over a day
+			<span class="select is-small">
+				<select id="attempts-type" name="flagAttempts" onchange="toggleThreshold(null, this.value);">
+					<option value="section" {{selected config.flagAttempts "section"}}>based on section</option>
+					<option value="time" {{selected config.flagAttempts "time"}}>based on time</option>
+				</select>
+			</span>
+		</label>
+		<div class="field is-horizontal" id="attempts-threshold">
+			<span>Threshold:</span>
+			&nbsp;&nbsp;
+			<p class="control">
+				<input class="input is-small" type="text" value="{{prettyMs config.flagAttemptsThreshold}} minutes" placeholder="Example: 1 hour">
+			</p>
+		</div>
+		<label id="invalid" class="checkbox">
+			<input type="hidden" name="flagInvalid" value="off">
+			<input type="checkbox" name="flagInvalid" {{checked config.flagInvalid}} />
+			Mark entries with flag(s) as invalid
+		</label>
 		<script src="/javascripts/config-display.js"></script>
 		<script src="/javascripts/file-reader.js"></script>
 	</div>
