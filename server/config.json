@@ -1,13 +1,16 @@
 {
-	"course": "15-Test",
-	"emailDomain": "andrew.cmu.edu",
-	"minScore": 0,
-	"maxScore": 3,
-	"radioInput": true,
-	"manualLab": false,
-	"flagSection": true,
-	"flagAttempts": "time",
-	"flagAttemptsThreshold": 3600000,
-	"flagGhosts": true,
-	"sections": {}
+  "course": "",
+  "emailDomain": "",
+  "offsetHours": 0,
+  "offsetMinutes": 0,
+  "minScore": 0,
+  "maxScore": 3,
+  "lowercaseStudents": false,
+  "radioInput": true,
+  "manualLab": false,
+  "flagSection": false,
+  "flagAttempts": "",
+  "flagAttemptsThreshold": 3600000,
+  "flagGhosts": true,
+  "sections": {}
 }

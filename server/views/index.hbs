@@ -13,7 +13,7 @@
 				</p>
 			</div>
 		</div>
-		{{> success}}
+		<script src="/javascripts/success.js"></script>
 	{{/if}}
 	<div class="hero-body">
 		<div class="container">
@@ -29,7 +29,7 @@
 		  			<form method="POST" action="/go">
 			  			<div class="field is-grouped">
 							<p class="control is-expanded has-icons-left">
-								<input class="input" type="text" name="student_id" placeholder="Check-in student ID">
+								<input class="input" type="text" name="student_id" placeholder="Check-in student ID" required>
 								<span class="icon is-left">
 									<i class="fa fa-rocket"></i>
 						    	</span>

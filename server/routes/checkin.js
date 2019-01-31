@@ -31,10 +31,9 @@ router.get('/:student_id', authRequired, (req, res) => {
 
     const now = Date.now();
 
-    if (!err) {
+    if (!err && student) {
+      section = student.section;
       if (section) {
-        section = student.section;
-
         if (config.get('flagSection')) {
           const sections = config.get('sections');
           const validRange = sections[section];
@@ -53,16 +52,17 @@ router.get('/:student_id', authRequired, (req, res) => {
 
     const flagAttempts = config.get('flagAttempts');
     if (flagAttempts) {
+      const today = moment().startOf('day').valueOf();
       Entry.find({
         student_id,
-        date: { $gte: moment().startOf('day') },
+        date: { $gte: today },
       }).sort('date').exec((entryErr, entries) => {
         if (!entryErr && entries) {
-          entries.some((entry) => {
+          entries.filter(entry => entry.date > today).some((entry) => {
             const diff = now - entry.date;
             if (flagAttempts === 'time') {
               if (diff > config.get('flagAttemptsThreshold')) {
-                flags.attempt = { diff };
+                flags.attempt = { diff, score: entry.score };
                 return true;
               }
             } else if (flagAttempts === 'section') {
@@ -72,7 +72,11 @@ router.get('/:student_id', authRequired, (req, res) => {
                 const validEnd = moment(validRange.end).valueOf();
                 if (validStart <= now && now <= validEnd) {
                   if (entry.date < validStart || entry.date > validEnd) {
-                    flags.attempt = { diff, section: entry.section };
+                    flags.attempt = {
+                      diff,
+                      section: entry.section,
+                      score: entry.score,
+                    };
                   }
                   return true;
                 }
@@ -92,20 +96,41 @@ router.get('/:student_id', authRequired, (req, res) => {
 
 /* POST checkin data */
 router.post('/:student_id', authRequired, (req, res, next) => {
-  const { section, score } = req.body;
+  const { section, score, flags } = req.body;
   if (!section || !score) {
     return next(createError(400, 'Provide section and score'));
   }
-  Entry.create({
-    student_id: req.params.student_id,
-    date: Date.now(),
-    section: section.toUpperCase(),
-    lab: config.get('manualLab') ? req.body.lab : null,
-    score,
-    ta: req.user._id,
-  }, (err) => {
+  if (score < config.get('minScore') || score > config.get('maxScore')) {
+    return next(createError(400, 'Invalid score'));
+  }
+
+  let { student_id } = req.params;
+  if (config.get('lowercaseStudents')) student_id = student_id.toLowerCase();
+
+  const today = moment().startOf('day').valueOf();
+  Entry.update({
+    student_id,
+    date: { $gte: today },
+  }, {
+    $set: { good: false },
+  }, { multi: true }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/?success=check-in');
+    const options = {
+      student_id,
+      date: Date.now(),
+      section: section.toUpperCase(),
+      lab: config.get('manualLab') ? req.body.lab : null,
+      score,
+      ta: req.user._id,
+    };
+    if (flags) {
+      options.flags = JSON.parse(flags);
+      options.good = false;
+    }
+    Entry.create(options, (createErr) => {
+      if (createErr) return next(createError(500, createErr));
+      return res.redirect('/?success=check-in');
+    });
   });
 });
 

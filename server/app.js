@@ -10,6 +10,7 @@ const session = require('express-session');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const config = require('./util/config');
 const User = require('./models/User');
@@ -45,6 +46,12 @@ app.engine('hbs', hbs({
       for (let i = n; i <= m; i += 1) L.push(i);
       return L;
     },
+    isNonEmpty: obj => Object.keys(obj).length > 0,
+    toString: a => JSON.stringify(a),
+    prettyDiff: diff => moment.duration(diff).humanize(true),
+    prettyMs: ms => moment.duration(ms, 'ms').minutes(),
+    checked: val => (val ? 'checked' : ''),
+    selected: (val1, val2) => (val1 === val2 ? 'selected' : ''),
   },
 }));
 app.set('view engine', 'hbs');

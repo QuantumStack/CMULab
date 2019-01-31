@@ -13,7 +13,7 @@
 			</div>
 		</div>
 	</nav>
-	{{> success}}
+	<script src="/javascripts/success.js"></script>
 {{/if}}
 
 <br />
@@ -63,6 +63,14 @@
 					<i class="fa fa-users"></i>
 		    	</span>
 				<span>People</span>
+			</a>
+		</li>
+		<li class="{{#if isConfig}}is-active{{/if}}">
+			<a href="/admin/config">
+				<span class="icon is-small">
+					<i class="fa fa-cog"></i>
+		    	</span>
+				<span>Settings</span>
 			</a>
 		</li>
 	</ul>
@@ -139,6 +147,7 @@
 					{{> users}}
 				{{/if}}
 			{{/if}}
+			{{#if isConfig}} {{> config}} {{/if}}
 		</div>
 	</div>
 </div>

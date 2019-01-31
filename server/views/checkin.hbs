@@ -1,4 +1,29 @@
 <section class="hero is-light is-bold is-fullheight">
+	{{#if (isNonEmpty flags)}}
+		<div id="success" class="hero-head">
+			<div class="container">
+				<br />
+				<p class="has-text-centered">
+					<span class="has-text-danger">
+						<span class="icon">
+							<i class="fa fa-exclamation-triangle"></i>
+				    	</span>
+				    	<strong>
+				    		{{#if flags.ghost}}
+				    			Student is not registered for {{course}}.
+			    			{{/if}}
+			    			{{#if flags.attempt}}
+			    				{{student}} was checked in {{prettyDiff flags.attempt.diff}} ago{{#if flags.attempt.section}} to section {{flags.attempt.section}}{{/if}} for {{flags.attempt.score}}.
+		    				{{/if}}
+				    		{{#if flags.section}}
+				    			This is wrong section for {{student}} (enrolled in {{section}}).
+			    			{{/if}}
+				    	</strong>
+			    	</span>
+				</p>
+			</div>
+		</div>
+	{{/if}}
 	<div class="hero-body">
 		<div class="container">
 			<div class="columns">
@@ -15,6 +40,9 @@
 					</h6>
 
 					<form method="post" action="/checkin/{{student}}">
+						{{#if (isNonEmpty flags)}}
+							<input type="hidden" name="flags" value="{{toString flags}}" />
+						{{/if}}
 						{{#if lab}}
 							<div class="field">
 								<label class="label">Lab</label>
@@ -36,25 +64,13 @@
 								<div class="columns is-multiline is-mobile">
 									{{#each (range minscore maxscore)}}
 										<div class="column">
-											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-outlined is-large score-button">
+											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-large score-button">
 												{{this}}
 											</a>
 										</div>
 									{{/each}}
 								</div>
-								<script>
-								function setScore(n) {
-									resetScore();
-									document.getElementById("score-" + n).className = "button is-fullwidth is-dark is-large score-button";
-									document.getElementById("score").value = n;
-								}
-								function resetScore() {
-									var btns = document.getElementsByClassName("score-button");
-									for (var i = 0; i < btns.length; i++) {
-										btns[i].className = "button is-fullwidth is-outlined is-large score-button";
-									}
-								}
-								</script>
+								<script src="/javascripts/score-buttons.js"></script>
 							{{else}}
 								<div class="control">
 									<input class="input" name="score" type="number" placeholder="Example: 3" min="{{minscore}}" max="{{maxscore}}" required>
