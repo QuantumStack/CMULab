@@ -1,6 +1,4 @@
 const nodemailer = require('nodemailer');
-const hbs = require('nodemailer-express-handlebars');
-const exphbs = require('express-handlebars');
 
 const transporter = nodemailer.createTransport({
   host: process.env.CMULAB_SMTP_SERVER,
