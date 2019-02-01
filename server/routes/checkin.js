@@ -1,6 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const moment = require('moment');
+const email = require('./../util/mail');
 const config = require('./../util/config');
 const convertDate = require('./../util/convertDate');
 const Entry = require('./../models/Entry');
@@ -126,9 +127,10 @@ router.post('/:student_id', authRequired, (req, res, next) => {
     $set: { good: false },
   }, { multi: true }, (err) => {
     if (err) return next(createError(500, err));
+    const date = Date.now();
     const options = {
       student_id,
-      date: Date.now(),
+      date,
       section: section.toUpperCase(),
       lab: config.get('manualLab') ? req.body.lab : null,
       score,
@@ -140,7 +142,31 @@ router.post('/:student_id', authRequired, (req, res, next) => {
     }
     Entry.create(options, (createErr) => {
       if (createErr) return next(createError(500, createErr));
+
+      // Create a message
+      const message = {
+        from: `CMULab for ${config.get('course')} <${process.env.CMULAB_SMTP_USER}>`,
+        to: `${student_id}@${config.get('emailDomain')}`,
+        subject: `You have been checked in to ${config.get('course')}!`,
+        html: `
+          <h4>You have been checked in through <a href="https://cmulab.quantumstack.xyz">CMULab</a> for ${config.get('course')}!</h4>
+          <p>Please verify the contents of this email and ask your TA <span style="font-weight: bold">immediately</span> regarding any questions or clarifications.</p>
+          <p><span style="font-weight: bold">Student ID:</span> ${student_id}
+          <br /><span style="font-weight: bold">Section:</span> ${section.toUpperCase()}
+          <br /><span style="font-weight: bold">Score:</span> ${score}
+          <br /><span style="font-weight: bold">Time:</span> ${convertDate(moment(date), -1, false).format('MMMM Do YYYY, h:mm:ss a')}
+          <br /><span style="font-weight: bold">TA:</span> ${req.user._id}</p>
+
+          <small>&copy; <u><a href="https://quantumstack.xyz">QuantumStack 2019</a></small>
+        `,
+      };
+
+      const info = email.sendMail(message).then((info) => {
+        console.log(info);
+      }).catch((err) => console.error(err));
+
       return res.redirect('/?success=check-in');
+
     });
   });
 });
