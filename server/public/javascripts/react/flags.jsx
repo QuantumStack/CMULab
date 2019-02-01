@@ -25,7 +25,7 @@ class FlagDropdown extends React.Component {
                   <i className='fas fa-redo'></i>
                 </span>
                 &nbsp;
-                Student was checked in {flags.attempt.diff} prior{this.flags.attempt.section && ` to section ${flags.attempt.section}`} for {flags.attempt.score} points.
+                Student was checked in {flags.attemptDiff} prior{flags.attemptSection && ` to section ${flags.attemptSection}`} for {flags.attemptScore} points.
               </p>
             </div>
             <hr className='dropdown-divider' />
@@ -46,7 +46,7 @@ class FlagDropdown extends React.Component {
           </div>
         }
         <div className='dropdown-item'>
-          {(flags.ghost || flags.attempts) &&
+          {(flags.ghost || flags.section) &&
             <p className='help'>
               <span className='icon is-small has-text-link'>
                 <i className='fas fa-lightbulb'></i>
@@ -55,7 +55,7 @@ class FlagDropdown extends React.Component {
                Go to the <a href='/admin/students'>students page</a> to update student registration data.
             </p>
           }
-          {(flags.attempts || flags.section) &&
+          {(flags.attempt || flags.section) &&
             <p className='help'>
               <span className='icon is-small has-text-link'>
                 <i className='fas fa-lightbulb'></i>

@@ -182,7 +182,7 @@ var DataTable = function (_React$Component) {
           'tbody',
           null,
           entries.map(function (entry) {
-            return React.createElement(DataRow, entry);
+            return React.createElement(DataRow, Object.assign({ key: entry._id }, entry));
           })
         )
       );

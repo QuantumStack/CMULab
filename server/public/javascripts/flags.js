@@ -64,11 +64,11 @@ var FlagDropdown = function (_React$Component) {
                   React.createElement('i', { className: 'fas fa-redo' })
                 ),
                 '\xA0 Student was checked in ',
-                flags.attempt.diff,
+                flags.attemptDiff,
                 ' prior',
-                this.flags.attempt.section && ' to section ' + flags.attempt.section,
+                flags.attemptSection && ' to section ' + flags.attemptSection,
                 ' for ',
-                flags.attempt.score,
+                flags.attemptScore,
                 ' points.'
               )
             ),
@@ -96,7 +96,7 @@ var FlagDropdown = function (_React$Component) {
           React.createElement(
             'div',
             { className: 'dropdown-item' },
-            (flags.ghost || flags.attempts) && React.createElement(
+            (flags.ghost || flags.section) && React.createElement(
               'p',
               { className: 'help' },
               React.createElement(
@@ -112,7 +112,7 @@ var FlagDropdown = function (_React$Component) {
               ),
               ' to update student registration data.'
             ),
-            (flags.attempts || flags.section) && React.createElement(
+            (flags.attempt || flags.section) && React.createElement(
               'p',
               { className: 'help' },
               React.createElement(

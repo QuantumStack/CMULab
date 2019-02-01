@@ -12,12 +12,12 @@ const router = express.Router();
 
 function parseSectionTime(data) {
   const validStart = convertDate(moment({
-    hour: data.start_hour,
-    minute: data.start_minute,
+    hour: Number.parseInt(data.start_hour, 10),
+    minute: Number.parseInt(data.start_minute, 10),
   }));
   const validEnd = convertDate(moment({
-    hour: data.end_hour,
-    minute: data.end_minute,
+    hour: Number.parseInt(data.end_hour, 10),
+    minute: Number.parseInt(data.end_minute, 10),
   }));
   return [validStart, validEnd];
 }
@@ -71,33 +71,32 @@ router.get('/:student_id', authRequired, (req, res) => {
         date: { $gte: today },
       }).sort('date').exec((entryErr, entries) => {
         if (!entryErr && entries) {
-          entries.filter(entry => entry.date > today).some((entry) => {
-            const diff = now - entry.date;
+          for (let i = 0; i < entries.length; i += 1) {
+            const diff = now - entries[i].date;
             if (flagAttempts === 'time') {
               if (diff > config.get('flagAttemptsThreshold')) {
                 flags.attempt = true;
                 flags.attemptDiff = diff;
-                flags.attemptScore = entry.score;
+                flags.attemptScore = entries[i].score;
                 return true;
               }
             } else if (flagAttempts === 'section') {
               const sections = config.get('sections');
-              Object.values(sections).some((validRange) => {
-                const [validStart, validEnd] = parseSectionTime(validRange);
+              const validRanges = Object.values(sections);
+              for (let j = 0; j < validRanges.length; j += 1) {
+                const [validStart, validEnd] = parseSectionTime(validRanges[j]);
                 if (validStart <= now && now <= validEnd) {
-                  if (entry.date < validStart || entry.date > validEnd) {
+                  if (entries[i].date < validStart || entries[i].date > validEnd) {
                     flags.attempt = true;
                     flags.attemptDiff = diff;
-                    flags.attemptScore = entry.score;
-                    flags.attemptSection = entry.section;
+                    flags.attemptScore = entries[i].score;
+                    flags.attemptSection = entries[i].section;
                   }
-                  return true;
+                  break;
                 }
-                return false;
-              });
+              }
             }
-            return false;
-          });
+          }
         }
         renderPage();
       });

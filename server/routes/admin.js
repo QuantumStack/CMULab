@@ -2,6 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const json2csv = require('json2csv').parse;
 const csv2json = require('csvtojson');
+const moment = require('moment');
 const config = require('./../util/config');
 const helpers = require('./../util/helpers');
 const User = require('./../models/User');
@@ -29,7 +30,9 @@ router.get('/', adminRequired, (req, res) => {
 function parseDataQuery(query) {
   const options = {};
   const { filters } = query;
-  const { startDate, endDate, flags, good } = filters;
+  const {
+    startDate, endDate, flags, good,
+  } = filters;
   if (startDate && endDate) {
     options.date = {
       $gte: new Date(startDate),
@@ -120,10 +123,14 @@ router.post('/rawdata', adminRequired, (req, res, next) => {
   const [options, sort] = parseDataQuery(req.body);
   Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
-    res.send(entries.map(entry => ({
-      ...entry.toJSON(),
-      date: helpers.prettyDate(entry.date),
-    })));
+    res.send(entries.map((entry) => {
+      const newEntry = entry.toJSON();
+      newEntry.date = helpers.prettyDate(entry.date);
+      if (newEntry.flags && newEntry.flags.attemptDiff) {
+        newEntry.flags.attemptDiff = helpers.prettyDiff(newEntry.flags.attemptDiff);
+      }
+      return newEntry;
+    }));
   });
 });
 
@@ -164,6 +171,7 @@ router.post('/togglegood', adminRequired, (req, res, next) => {
   if (!_id || good == null) {
     return next(createError(400, 'Provide _id and good'));
   }
+  console.log(_id);
   Entry.update({ _id }, { $set: { good } }, (err) => {
     if (err) return next(createError(500, err));
     return res.send(200);
@@ -255,7 +263,11 @@ router.post('/writeconfig', adminRequired, (req, res, next) => {
   function iterItems(i, err) {
     if (err) return next(createError(500, err));
     if (i === newConfig.length) {
-      return res.redirect('/admin/config?success=settings+change');
+      config.save((saveErr) => {
+        if (saveErr) iterItems(null, saveErr);
+        return res.redirect('/admin/config?success=settings+change');
+      });
+      return;
     }
 
     const [key, value] = newConfig[i];
@@ -263,10 +275,13 @@ router.post('/writeconfig', adminRequired, (req, res, next) => {
     try {
       let v = value;
       const type = typeof config.get(key);
-      if (type === 'number') v = Number.parseInt(v, 10);
+      if (key === 'flagAttemptsThreshold') {
+        const [number, units] = v.split(' ');
+        v = moment.duration(Number.parseInt(number, 10), units).asMilliseconds();
+      } else if (type === 'number') v = Number.parseInt(v, 10);
       else if (type === 'boolean') v = typeof v === 'object';
-
       if (key === 'flagAttempts') v = v.length === 3 ? v[2] : '';
+
       if (key === 'sections') {
         if (value) {
           csv2json().fromString(value).then((json) => {

@@ -67,7 +67,7 @@ var DataRow = function (_React$Component) {
 
       return React.createElement(
         'tr',
-        { key: _id },
+        null,
         React.createElement(
           'td',
           null,

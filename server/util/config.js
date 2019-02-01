@@ -14,10 +14,9 @@ module.exports = {
     if (configFile[key] === null) throw new Error('Invalid config key');
 
     configFile[key] = value;
-
+  },
+  save: (callback) => {
     const json = JSON.stringify(configFile, null, 2);
-    fs.writeFile('./config.json', json, 'utf8', (err) => {
-      if (err) throw err;
-    });
+    fs.writeFile('./config.json', json, 'utf8', callback);
   },
 };

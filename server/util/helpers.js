@@ -23,11 +23,11 @@ module.exports = {
     return Object.keys(o).length > 0;
   },
   toString: a => JSON.stringify(a),
-  prettyDiff: diff => moment.duration(diff).humanize(true),
+  prettyDiff: diff => moment.duration(diff).humanize(),
   prettyMs: ms => moment.duration(ms, 'ms').minutes(),
   prettyDate: (date) => {
     const d = convertDate(moment(date), -1, false);
-    return d.format('dd YYYY-MM-DD HH:mm');
+    return d.format('dd YYYY-MM-DD HH:mm:ss');
   },
   checked: val => (val ? 'checked' : ''),
   selected: (val1, val2) => (val1 === val2 ? 'selected' : ''),

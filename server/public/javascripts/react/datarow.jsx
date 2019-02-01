@@ -30,7 +30,7 @@ class DataRow extends React.Component {
   render() {
     const { _id, section, student_id, score, lab, date, ta, flags } = this.props;
     const { good, isActive } = this.state;
-    return <tr key={_id}>
+    return <tr>
       <td>
         {section}
       </td>

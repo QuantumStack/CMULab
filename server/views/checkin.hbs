@@ -13,7 +13,7 @@
 				    			Student is not registered for {{course}}.
 			    			{{/if}}
 			    			{{#if flags.attempt}}
-			    				{{student}} was checked in {{prettyDiff flags.attempt.diff}} ago{{#if flags.attempt.section}} to section {{flags.attempt.section}}{{/if}} for {{flags.attempt.score}} points.
+			    				{{student}} was checked in {{prettyDiff flags.attemptDiff}} ago{{#if flags.attemptSection}} to section {{flags.attemptSection}}{{/if}} for {{flags.attemptScore}} points.
 		    				{{/if}}
 				    		{{#if flags.section}}
 				    			This is wrong section time for {{student}}.

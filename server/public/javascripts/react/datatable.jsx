@@ -101,7 +101,7 @@ class DataTable extends React.Component {
       </thead>
       <tbody>
         {entries.map(entry => (
-          <DataRow {...entry} />
+          <DataRow key={entry._id} {...entry} />
         ))}
       </tbody>
     </table>;
