@@ -18,7 +18,9 @@ var DataView = function (_React$Component) {
       error: null,
       isLoaded: false,
       entries: [],
-      filters: {},
+      filters: {
+        good: true
+      },
       sort: {
         date: -1
       },
@@ -31,6 +33,7 @@ var DataView = function (_React$Component) {
     _this.deleteData = _this.deleteData.bind(_this);
     _this.updateFilters = _this.updateFilters.bind(_this);
     _this.updateSort = _this.updateSort.bind(_this);
+    _this.assignLab = _this.assignLab.bind(_this);
     return _this;
   }
 
@@ -154,6 +157,19 @@ var DataView = function (_React$Component) {
       }, this.getData);
     }
   }, {
+    key: 'assignLab',
+    value: function assignLab(lab, preserve) {
+      var _this5 = this;
+
+      axios.post('/admin/assignlab', {
+        filters: this.state.filters,
+        lab: lab,
+        preserve: preserve
+      }).then(this.getData, function (err) {
+        return _this5.setState({ error: err });
+      });
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.getData();
@@ -191,7 +207,7 @@ var DataView = function (_React$Component) {
         React.createElement(FilterPane, { filters: filters, updateFilters: this.updateFilters, getData: this.getData }),
         React.createElement(DataViewBar, { entriesCount: entries.length, filters: filters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
         React.createElement(DataDownload, { isActive: modalActive, toggleModal: this.toggleModal, data: downloadData }),
-        React.createElement(DataTable, { sort: sort, entries: entries, updateSort: this.updateSort })
+        React.createElement(DataTable, { sort: sort, entries: entries, updateSort: this.updateSort, assignLab: this.assignLab })
       );
     }
   }]);

@@ -11,19 +11,59 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DataTable = function (_React$Component) {
   _inherits(DataTable, _React$Component);
 
-  function DataTable() {
+  function DataTable(props) {
     _classCallCheck(this, DataTable);
 
-    return _possibleConstructorReturn(this, (DataTable.__proto__ || Object.getPrototypeOf(DataTable)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (DataTable.__proto__ || Object.getPrototypeOf(DataTable)).call(this, props));
+
+    _this.state = {
+      lab: '',
+      preserve: false,
+      isDone: false
+    };
+    _this.onChangeLab = _this.onChangeLab.bind(_this);
+    _this.onChangePreserve = _this.onChangePreserve.bind(_this);
+    _this.sendLab = _this.sendLab.bind(_this);
+    return _this;
   }
 
   _createClass(DataTable, [{
+    key: 'onChangeLab',
+    value: function onChangeLab(e) {
+      this.setState({ lab: e.target.value });
+    }
+  }, {
+    key: 'onChangePreserve',
+    value: function onChangePreserve(e) {
+      this.setState({ preserve: e.target.checked });
+    }
+  }, {
+    key: 'sendLab',
+    value: function sendLab(f) {
+      var _this2 = this;
+
+      f.preventDefault();
+      var _state = this.state,
+          lab = _state.lab,
+          preserve = _state.preserve;
+
+      this.props.assignLab(lab, preserve);
+      this.setState({ lab: '', isDone: true }, function () {
+        return setTimeout(function () {
+          _this2.setState({ isDone: false });
+        }, 5000);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       var _props = this.props,
           sort = _props.sort,
           entries = _props.entries,
           updateSort = _props.updateSort;
+      var isDone = this.state.isDone;
 
       var columns = [['Section', 'section'], ['Student ID', 'student_id'], ['Score', 'score'], ['Lab', 'lab'], ['Date', 'date'], ['TA', 'ta'], ['Flags', 'flags']];
       return React.createElement(
@@ -42,14 +82,97 @@ var DataTable = function (_React$Component) {
 
               return React.createElement(
                 'th',
-                { onClick: function onClick() {
-                    return updateSort(name);
-                  } },
-                title,
-                sort[name] && React.createElement(
+                null,
+                name === 'lab' && React.createElement(
+                  'div',
+                  { className: 'dropdown is-hoverable' },
+                  React.createElement(
+                    'div',
+                    { className: 'dropdown-trigger' },
+                    React.createElement(
+                      'a',
+                      { className: 'tooltip', 'data-tooltip': 'Assign lab' },
+                      React.createElement(
+                        'span',
+                        { className: 'icon has-text-info' },
+                        React.createElement('i', { className: 'fas fa-pencil-alt' })
+                      )
+                    )
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'dropdown-menu', role: 'menu' },
+                    React.createElement(
+                      'div',
+                      { className: 'dropdown-content' },
+                      React.createElement(
+                        'div',
+                        { className: 'dropdown-item' },
+                        React.createElement(
+                          'form',
+                          { onSubmit: _this3.sendLab },
+                          React.createElement(
+                            'div',
+                            { className: 'field' },
+                            React.createElement(
+                              'div',
+                              { className: 'control' },
+                              React.createElement('input', { className: 'input is-small', type: 'text', placeholder: 'Example: quacks lab', onChange: _this3.onChangeLab, required: true })
+                            )
+                          ),
+                          React.createElement(
+                            'div',
+                            { className: 'field' },
+                            React.createElement(
+                              'label',
+                              { className: 'checkbox' },
+                              React.createElement('input', { type: 'checkbox', onChange: _this3.onChangePreserve }),
+                              '\xA0 Preserve existing lab designations'
+                            )
+                          ),
+                          React.createElement(
+                            'div',
+                            { className: 'field' },
+                            React.createElement(
+                              'div',
+                              { className: 'control' },
+                              React.createElement(
+                                'button',
+                                { type: 'submit', className: 'button is-info is-small' },
+                                React.createElement(
+                                  'span',
+                                  { className: 'icon' },
+                                  React.createElement('i', { className: 'fa fa-flask' })
+                                ),
+                                React.createElement(
+                                  'span',
+                                  null,
+                                  'Submit'
+                                )
+                              ),
+                              isDone && React.createElement(
+                                'span',
+                                { className: 'has-text-success' },
+                                '\xA0Done!'
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                ),
+                React.createElement(
                   'span',
-                  { className: 'icon' },
-                  React.createElement('i', { className: 'fas fa-caret-' + (sort[name] > 0 ? 'down' : 'up') })
+                  { onClick: function onClick() {
+                      return updateSort(name);
+                    } },
+                  title,
+                  sort[name] && React.createElement(
+                    'span',
+                    { className: 'icon' },
+                    React.createElement('i', { className: 'fas fa-caret-' + (sort[name] > 0 ? 'down' : 'up') })
+                  )
                 )
               );
             })

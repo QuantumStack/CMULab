@@ -51,7 +51,7 @@ class FilterPane extends React.Component {
             <div className='field'>
               <label className='label'>Lab:</label>
               <div className='control'>
-                <input className='input' name='lab' type='text' placeholder='Example: 1' value={filters.lab} onChange={updateFilters} />
+                <input className='input' name='lab' type='text' placeholder='Example: quacks lab' value={filters.lab} onChange={updateFilters} />
               </div>
             </div>
             <div className='field'>

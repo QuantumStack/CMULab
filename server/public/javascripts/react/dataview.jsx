@@ -5,7 +5,9 @@ class DataView extends React.Component {
       error: null,
       isLoaded: false,
       entries: [],
-      filters: {},
+      filters: {
+        good: true,
+      },
       sort: {
         date: -1,
       },
@@ -18,6 +20,7 @@ class DataView extends React.Component {
     this.deleteData = this.deleteData.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
     this.updateSort = this.updateSort.bind(this);
+    this.assignLab = this.assignLab.bind(this);
   }
 
   getData() {
@@ -109,6 +112,14 @@ class DataView extends React.Component {
     }, this.getData);
   }
 
+  assignLab(lab, preserve) {
+    axios.post('/admin/assignlab', {
+      filters: this.state.filters,
+      lab,
+      preserve,
+    }).then(this.getData, err => this.setState({ error: err }));
+  }
+
   componentDidMount() {
     this.getData();
   }
@@ -127,7 +138,7 @@ class DataView extends React.Component {
       <FilterPane filters={filters} updateFilters={this.updateFilters} getData={this.getData} />
       <DataViewBar entriesCount={entries.length} filters={filters} updateFilters={this.updateFilters} getData={this.getData} downloadData={this.downloadData} deleteData={this.deleteData} />
       <DataDownload isActive={modalActive} toggleModal={this.toggleModal} data={downloadData} />
-      <DataTable sort={sort} entries={entries} updateSort={this.updateSort} />
+      <DataTable sort={sort} entries={entries} updateSort={this.updateSort} assignLab={this.assignLab} />
     </div>;
   }
 }

@@ -41,14 +41,6 @@
 
 <div class="tabs is-centered is-boxed is-small">
 	<ul>
-		<li class="{{#if isLab}}is-active{{/if}}">
-			<a href="/admin/lab">
-				<span class="icon is-small">
-					<i class="fa fa-flask"></i>
-		    	</span>
-				<span>Assign Lab</span>
-			</a>
-		</li>
 		<li class="{{#if isData}}is-active{{/if}}">
 			<a href="/admin/data">
 				<span class="icon is-small">
@@ -102,7 +94,6 @@
 				</div>
 			{{/if}}
 
-			{{#if isLab}} {{> lab}} {{/if}}
 			{{#if isData}}
 				{{> data}}
 			{{/if}}

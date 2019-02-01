@@ -9,13 +9,34 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DataDownload = function (_React$Component) {
   _inherits(DataDownload, _React$Component);
 
-  function DataDownload() {
+  function DataDownload(props) {
     _classCallCheck(this, DataDownload);
 
-    return _possibleConstructorReturn(this, (DataDownload.__proto__ || Object.getPrototypeOf(DataDownload)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (DataDownload.__proto__ || Object.getPrototypeOf(DataDownload)).call(this, props));
+
+    _this.fullData = React.createRef();
+    _this.selectAll = _this.selectAll.bind(_this);
+    return _this;
   }
 
   _createClass(DataDownload, [{
+    key: 'selectAll',
+    value: function selectAll() {
+      var node = this.fullData.current;
+
+      if (document.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(node);
+        range.select();
+      } else if (window.getSelection) {
+        var selection = window.getSelection();
+        var _range = document.createRange();
+        _range.selectNodeContents(node);
+        selection.removeAllRanges();
+        selection.addRange(_range);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -34,8 +55,25 @@ var DataDownload = function (_React$Component) {
             'div',
             { className: 'box' },
             React.createElement(
+              'a',
+              { className: 'button is-small is-outlined is-dark', onClick: this.selectAll },
+              React.createElement(
+                'span',
+                { className: 'icon' },
+                React.createElement('i', { className: 'fa fa-mouse-pointer' })
+              ),
+              React.createElement(
+                'span',
+                null,
+                'Select All'
+              )
+            ),
+            '\xA0 Full data:',
+            React.createElement('br', null),
+            React.createElement('br', null),
+            React.createElement(
               'pre',
-              null,
+              { ref: this.fullData },
               data
             )
           )

@@ -21,16 +21,7 @@ function appData() {
 
 /* GET admin console -> lab */
 router.get('/', adminRequired, (req, res) => {
-  res.redirect('/admin/lab');
-});
-
-/* GET assign lab */
-router.get('/lab', adminRequired, (req, res) => {
-  res.render('admin', {
-    isLab: true,
-    success: req.query.success,
-    ...appData(),
-  });
+  res.redirect('/admin/data');
 });
 
 /* GET view data */
@@ -178,20 +169,13 @@ router.post('/togglegood', adminRequired, (req, res, next) => {
 
 /* POST assign lab number */
 router.post('/assignlab', adminRequired, (req, res, next) => {
-  const { startDate, endDate, lab } = req.body;
-  if (!startDate || !endDate || lab == null) {
-    return next(createError(400, 'Provide startDate, endDate, lab'));
-  }
-  Entry.updateMany({
-    date: {
-      $gte: new Date(startDate),
-      $lt: new Date(endDate),
-    },
-  }, {
-    lab,
-  }, (err) => {
+  const { lab, preserve } = req.body;
+  if (lab == null) return next(createError(400, 'Provide lab'));
+  const options = parseDataQuery(req.body)[0];
+  if (preserve) options.lab = null;
+  Entry.updateMany(options, { lab }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/lab?success=lab+assign');
+    return res.send(200);
   });
 });
 
