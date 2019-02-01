@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const json2csv = require('json2csv').parse;
 const csv2json = require('csvtojson');
 const config = require('./../util/config');
+const helpers = require('./../util/helpers');
 const User = require('./../models/User');
 const Entry = require('./../models/Entry');
 const Student = require('./../models/Student');
@@ -58,7 +59,6 @@ router.get('/data', adminRequired, (req, res, next) => {
   res.render('admin', {
     isData: true,
     isDataView: true,
-    entries: [],
     success: req.query.success,
     ...appData(),
   });
@@ -120,7 +120,10 @@ router.post('/rawdata', adminRequired, (req, res, next) => {
   const [options, sort] = parseDataQuery(req.body);
   Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
-    res.send(entries);
+    res.send(entries.map(entry => ({
+      ...entry.toJSON(),
+      date: helpers.prettyDate(entry.date),
+    })));
   });
 });
 
@@ -211,6 +214,7 @@ router.post('/removeuser', adminRequired, (req, res, next) => {
 
 /* POST enroll students */
 router.post('/enrollstudents', adminRequired, (req, res, next) => {
+  if (!req.body.data) return next(createError(400, 'Provide CSV file'));
   csv2json().fromString(req.body.data).then((json) => {
     const columns = Object.keys(json[0]);
     const desired = ['_id', 'section'];
@@ -230,7 +234,7 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
       }, item, { upsert: true }, (updateErr) => {
         const j = i + 1;
         if (updateErr) return iterItems(j, updateErr);
-        return iterItems(i);
+        return iterItems(j);
       });
     }
     iterItems(0);
