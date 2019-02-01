@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const current = 'v1.2.3';
+const current = 'v1.3';
 let latest;
 
 function check() {
