@@ -18,13 +18,7 @@ var FilterPane = function (_React$Component) {
   _createClass(FilterPane, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      /*bulmaCalendar.attach('.datepicker', {
-        showHeader: false,
-        showFooter: false,
-        todayButton: false,
-        clearButton: false,
-        dateFormat: 'YYYY-MM-DD',
-      });*/
+      flatpickr('.datepicker');
     }
   }, {
     key: 'render',

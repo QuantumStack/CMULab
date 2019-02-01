@@ -1,12 +1,6 @@
 class FilterPane extends React.Component {
   componentDidMount() {
-    /*bulmaCalendar.attach('.datepicker', {
-      showHeader: false,
-      showFooter: false,
-      todayButton: false,
-      clearButton: false,
-      dateFormat: 'YYYY-MM-DD',
-    });*/
+    flatpickr('.datepicker');
   }
 
   render() {

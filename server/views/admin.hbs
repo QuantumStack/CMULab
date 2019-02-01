@@ -1,4 +1,5 @@
-<script src="/javascripts/bulma-calendar.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 {{#if success}}
 	<nav id="success" class="navbar is-success">
@@ -116,13 +117,3 @@
 		{{> footer }}
 	</p>
 </div>
-
-<script>
-var calendars = bulmaCalendar.attach('[type="date"]', {
-	showHeader: false,
-	showFooter: false,
-	todayButton: false,
-	clearButton: false,
-	dateFormat: "YYYY-MM-DD",
-});
-</script>
