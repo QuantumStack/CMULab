@@ -11,6 +11,8 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
 const config = require('./util/config');
 const helpers = require('./util/helpers');
 const User = require('./models/User');
@@ -18,8 +20,6 @@ const indexRouter = require('./routes/index');
 const checkinRouter = require('./routes/checkin');
 const adminRouter = require('./routes/admin');
 const loginRouter = require('./routes/login');
-
-require('dotenv').config();
 
 const app = express();
 

@@ -1,27 +1,16 @@
-<article class="message is-info">
-	<div class="message-body">
-		Fill in the boxes below to filter data. Note that you <i>must</i> use start and end dates together, and end dates are <i>not</i> inclusive. If you want <i>all</i> the data stored, just click Submit without any filters.
-	</div>
-</article>
+<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+<script src="/javascripts/bulma-quickview.min.js"></script>
+<script src="/javascripts/dropdown.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/javascripts/toggle-good.js"></script>
 
-<form method="GET" target="_self">
-	{{> filters}}
-	<div class="field is-grouped">
-		<div class="control">
-			<button formaction="/admin/viewdata" type="submit" class="button is-info">
-				<span class="icon">
-					<i class="fa fa-table"></i>
-		    	</span>
-				<span>View Data</span>
-			</button>
-		</div>
-		<div class="control">
-			<button formaction="/admin/getcsv" type="submit" class="button">
-				<span class="icon">
-					<i class="fa fa-download"></i>
-		    	</span>
-				<span>Get CSV</span>
-			</button>
-		</div>
-	</div>
-</form>
+<div id="root"></div>
+
+<script src="/javascripts/filterpane.js"></script>
+<script src="/javascripts/datadownload.js"></script>
+<script src="/javascripts/dataviewbar.js"></script>
+<script src="/javascripts/flags.js"></script>
+<script src="/javascripts/datarow.js"></script>
+<script src="/javascripts/datatable.js"></script>
+<script src="/javascripts/dataview.js"></script>

@@ -33,20 +33,41 @@ router.get('/lab', adminRequired, (req, res) => {
   });
 });
 
-/* GET view + download data */
-router.get('/data', adminRequired, (req, res) => {
-  res.render('admin', {
-    isData: true,
-    success: req.query.success,
-    ...appData(),
-  });
-});
+/* GET view data */
+function parseDataQuery(query) {
+  const options = {};
+  const { filters } = query;
+  const { startDate, endDate, flags, good } = filters;
+  if (startDate && endDate) {
+    options.date = {
+      $gte: new Date(startDate),
+      $lt: new Date(endDate),
+    };
+    delete filters.startDate;
+    delete filters.endDate;
+  }
+  if (flags) {
+    options.flags = {
+      $gt: {},
+    };
+    delete filters.flags;
+  }
+  if (good) {
+    options.good = true;
+    delete filters.good;
+  }
 
-/* GET delete data */
-router.get('/delete', adminRequired, (req, res) => {
+  Object.entries(filters).forEach(([param, value]) => {
+    if (value !== '') options[param] = value;
+  });
+
+  return [options, query.sort];
+}
+router.get('/data', adminRequired, (req, res, next) => {
   res.render('admin', {
     isData: true,
-    isDataDelete: true,
+    isDataView: true,
+    entries: [],
     success: req.query.success,
     ...appData(),
   });
@@ -103,41 +124,19 @@ router.get('/config', adminRequired, (req, res, next) => {
   });
 });
 
-/* GET view data */
-function filterData(query) {
-  const options = {};
-  const { startDate, endDate } = query;
-  if (startDate && endDate) {
-    options.date = {
-      $gte: new Date(startDate),
-      $lt: new Date(endDate),
-    };
-    delete query.startDate;
-    delete query.endDate;
-  }
-
-  Object.entries(query).forEach(([param, value]) => {
-    if (value !== '') options[param] = value;
-  });
-
-  return options;
-}
-router.get('/viewdata', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort({ date: -1 }).exec((err, entries) => {
+/* POST raw data */
+router.post('/rawdata', adminRequired, (req, res, next) => {
+  const [options, sort] = parseDataQuery(req.body);
+  Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
-    res.render('admin', {
-      isData: true,
-      isDataView: true,
-      entries,
-      success: req.query.success,
-      ...appData(),
-    });
+    res.send(entries);
   });
 });
 
-/* GET download CSV */
-router.get('/getcsv', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort({ date: -1 }).exec((err, entries) => {
+/* POST download CSV */
+router.post('/getcsv', adminRequired, (req, res, next) => {
+  const [options, sort] = parseDataQuery(req.body);
+  Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
     res.setHeader('Content-Type', 'text/csv');
     res.write(json2csv(entries, {
@@ -159,9 +158,9 @@ router.get('/getcsv', adminRequired, (req, res, next) => {
 
 /* POST delete data */
 router.post('/delete', adminRequired, (req, res, next) => {
-  Entry.deleteMany(filterData(req.body)).exec((err) => {
+  Entry.deleteMany(parseDataQuery(req.body)[0]).exec((err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/delete?success=delete');
+    return res.send(200);
   });
 });
 

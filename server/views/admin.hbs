@@ -78,32 +78,7 @@
 
 <div class="container">
 	<div class="columns">
-		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isDataView}}is-6 is-offset-3{{/unless}}">
-			{{#if isData}}
-				{{#unless isDataView}}
-					<div class="tabs is-small is-toggle is-toggle-rounded is-fullwidth">
-						<ul>
-							<li class="{{#unless isDataDelete}}is-active{{/unless}}">
-								<a href="/admin/data">
-									<span class="icon is-small">
-										<i class="fa fa-eye"></i>
-							    	</span>
-									<span>View & Download</span>
-								</a>
-							</li>
-							<li class="{{#if isDataDelete}}is-active{{/if}}">
-								<a href="/admin/delete">
-									<span class="icon is-small">
-										<i class="fa fa-eraser"></i>
-							    	</span>
-									<span>Delete</span>
-								</a>
-							</li>
-						</ul>
-					</div>
-				{{/unless}}
-			{{/if}}
-
+		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isData}}is-6 is-offset-3{{/unless}}">
 			{{#if isPeople}}
 				<div class="tabs is-small is-toggle is-toggle-rounded is-fullwidth">
 					<ul>
@@ -129,15 +104,7 @@
 
 			{{#if isLab}} {{> lab}} {{/if}}
 			{{#if isData}}
-				{{#if isDataView}}
-					{{> viewdata}}
-				{{else}}
-					{{#if isDataDelete}}
-						{{> delete}}
-					{{else}}
-						{{> data}}
-					{{/if}}
-				{{/if}}
+				{{> data}}
 			{{/if}}
 			{{#if isDelete}} {{> delete}} {{/if}}
 			{{#if isPeople}}
