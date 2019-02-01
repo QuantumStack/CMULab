@@ -152,10 +152,10 @@ router.post('/:student_id', authRequired, (req, res, next) => {
           <h4>You have been checked in through <a href="https://cmulab.quantumstack.xyz">CMULab</a> for ${config.get('course')}!</h4>
           <p>Please verify the contents of this email and ask your TA <span style="font-weight: bold">immediately</span> regarding any questions or clarifications.</p>
           <p><span style="font-weight: bold">Student ID:</span> ${student_id}
-          </br><span style="font-weight: bold">Section:</span> ${section.toUpperCase()}
-          </br><span style="font-weight: bold">Score:</span> ${score}
-          </br><span style="font-weight: bold">Time:</span> ${convertDate(moment(date), -1, false).format('MMMM Do YYYY, h:mm:ss a')}
-          </br><span style="font-weight: bold">TA:</span> ${req.user._id}</p>
+          <br /><span style="font-weight: bold">Section:</span> ${section.toUpperCase()}
+          <br /><span style="font-weight: bold">Score:</span> ${score}
+          <br /><span style="font-weight: bold">Time:</span> ${convertDate(moment(date), -1, false).format('MMMM Do YYYY, h:mm:ss a')}
+          <br /><span style="font-weight: bold">TA:</span> ${req.user._id}</p>
 
           <small>&copy; <u><a href="https://quantumstack.xyz">QuantumStack 2019</a></small>
         `,
