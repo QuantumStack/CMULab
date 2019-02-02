@@ -23,7 +23,8 @@ class DataDownload extends React.Component {
   }
 
   download() {
-    download(this.props.data, 'data.csv', `text/${this.props.type}`);
+    const { data, type } = this.props;
+    download(data, `data.${type}`, `text/${type}`);
   }
 
   render() {

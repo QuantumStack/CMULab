@@ -50,15 +50,19 @@ var DataDownload = function (_React$Component) {
 
       return download;
     }(function () {
-      download(this.props.data, 'data.csv', 'text/' + this.props.type);
+      var _props = this.props,
+          data = _props.data,
+          type = _props.type;
+
+      download(data, 'data.' + type, 'text/' + type);
     })
   }, {
     key: 'render',
     value: function render() {
-      var _props = this.props,
-          data = _props.data,
-          isActive = _props.isActive,
-          toggleModal = _props.toggleModal;
+      var _props2 = this.props,
+          data = _props2.data,
+          isActive = _props2.isActive,
+          toggleModal = _props2.toggleModal;
 
       return React.createElement(
         'div',
