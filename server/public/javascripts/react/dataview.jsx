@@ -13,6 +13,7 @@ class DataView extends React.Component {
       },
       modalActive: false,
       downloadData: '',
+      downloadType: '',
     };
     this.getData = this.getData.bind(this);
     this.downloadData = this.downloadData.bind(this);
@@ -43,6 +44,7 @@ class DataView extends React.Component {
         sort: this.state.sort,
       }).then(res => this.setState({
         downloadData: res.data,
+        downloadType: type,
       }, this.toggleModal), err => this.setState({ error: err }));
     }
     if (type === 'json') {
@@ -53,6 +55,7 @@ class DataView extends React.Component {
           delete newEntry._id;
           return newEntry;
         }), null, 2),
+        downloadType: type,
       }, this.toggleModal);
     }
   }
@@ -70,6 +73,7 @@ class DataView extends React.Component {
   }
 
   updateFilters(e) {
+    console.log(e);
     if (['all', 'flags', 'good'].includes(e)) {
       this.setState((state) => {
         const { filters } = state;
@@ -126,7 +130,7 @@ class DataView extends React.Component {
 
   render() {
     const {
-      error, isLoaded, entries, filters, sort, modalActive, downloadData,
+      error, isLoaded, entries, filters, sort, modalActive, downloadData, downloadType,
     } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -137,7 +141,7 @@ class DataView extends React.Component {
     return <div>
       <FilterPane filters={filters} updateFilters={this.updateFilters} getData={this.getData} />
       <DataViewBar entriesCount={entries.length} filters={filters} updateFilters={this.updateFilters} getData={this.getData} downloadData={this.downloadData} deleteData={this.deleteData} />
-      <DataDownload isActive={modalActive} toggleModal={this.toggleModal} data={downloadData} />
+      <DataDownload isActive={modalActive} toggleModal={this.toggleModal} data={downloadData} type={downloadType} />
       <DataTable sort={sort} entries={entries} updateSort={this.updateSort} assignLab={this.assignLab} />
     </div>;
   }

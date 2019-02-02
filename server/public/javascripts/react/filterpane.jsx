@@ -1,6 +1,15 @@
 class FilterPane extends React.Component {
   componentDidMount() {
-    flatpickr('.datepicker');
+    flatpickr('.datepicker', {
+      onChange: (selectedDates, dateStr, instance) => {
+        this.props.updateFilters({
+          target: {
+            name: instance.input.name,
+            value: dateStr,
+          },
+        });
+      },
+    });
   }
 
   render() {

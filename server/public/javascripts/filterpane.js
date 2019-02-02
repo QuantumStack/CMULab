@@ -18,7 +18,18 @@ var FilterPane = function (_React$Component) {
   _createClass(FilterPane, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      flatpickr('.datepicker');
+      var _this2 = this;
+
+      flatpickr('.datepicker', {
+        onChange: function onChange(selectedDates, dateStr, instance) {
+          _this2.props.updateFilters({
+            target: {
+              name: instance.input.name,
+              value: dateStr
+            }
+          });
+        }
+      });
     }
   }, {
     key: 'render',

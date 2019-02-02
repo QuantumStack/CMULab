@@ -3,6 +3,7 @@ class DataDownload extends React.Component {
     super(props);
     this.fullData = React.createRef();
     this.selectAll = this.selectAll.bind(this);
+    this.download = this.download.bind(this);
   }
 
   selectAll() {
@@ -21,6 +22,10 @@ class DataDownload extends React.Component {
     }
   }
 
+  download() {
+    download(this.props.data, 'data.csv', `text/${this.props.type}`);
+  }
+
   render() {
     const { data, isActive, toggleModal } = this.props;
     return <div className={`modal ${isActive ? 'is-active' : ''}`}>
@@ -34,7 +39,12 @@ class DataDownload extends React.Component {
             <span>Select All</span>
           </a>
           &nbsp;
-          Full data:
+          <a className='button is-small is-outlined is-dark' onClick={this.download}>
+            <span className='icon'>
+              <i className='fa fa-download'></i>
+              </span>
+            <span>Download</span>
+          </a>
           <br /><br />
           <pre ref={this.fullData}>
             {data}

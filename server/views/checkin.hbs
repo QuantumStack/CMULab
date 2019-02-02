@@ -1,31 +1,30 @@
-<section class="hero is-light is-bold is-fullheight">
-	{{#if (isNonEmpty flags)}}
-		<div id="flags" class="hero-head">
-			<div class="container">
-				<br />
-				<p class="has-text-centered">
-					<span class="has-text-danger">
-						<span class="icon">
-							<i class="fa fa-exclamation-triangle"></i>
-				    	</span>
-				    	<strong>
-				    		{{#if flags.ghost}}
-				    			Student is not registered for {{course}}.
-			    			{{/if}}
-			    			{{#if flags.attempt}}
-			    				{{student}} was checked in {{prettyDiff flags.attemptDiff}} ago{{#if flags.attemptSection}} to section {{flags.attemptSection}}{{/if}} for {{flags.attemptScore}} points.
-		    				{{/if}}
-				    		{{#if flags.section}}
-				    			This is wrong section time for {{student}}.
-			    			{{/if}}
-			    			<u><a onclick="flagDismiss();">Dismiss</a></u>
-			    			<script src="/javascripts/flag-dismiss.js"></script>
-				    	</strong>
+{{#if (isNonEmpty flags)}}
+	<nav id="flags" class="navbar is-danger">
+		<div class="container">
+			<div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+				<div class="notification is-danger has-text-centered">
+					<span class="icon">
+						<i class="fa fa-exclamation-triangle"></i>
 			    	</span>
-				</p>
+			    	<strong>
+			    		{{#if flags.ghost}}
+			    			Student is not registered for {{course}}.
+		    			{{/if}}
+		    			{{#if flags.attempt}}
+		    				{{student}} was checked in {{prettyDiff flags.attemptDiff}} ago{{#if flags.attemptSection}} to section {{flags.attemptSection}}{{/if}} for {{flags.attemptScore}} points.
+	    				{{/if}}
+			    		{{#if flags.section}}
+			    			This is wrong section time for {{student}}.
+		    			{{/if}}
+		    			<u><a onclick="flagDismiss();">Dismiss</a></u>
+		    			<script src="/javascripts/flag-dismiss.js"></script>
+			    	</strong>
+		    	</div>
 			</div>
 		</div>
-	{{/if}}
+	</nav>
+{{/if}}
+<section id="main" class="hero is-light is-bold is-fullheight{{#if (isNonEmpty flags)}}-with-navbar{{/if}}">
 	<div class="hero-body">
 		<div class="container">
 			<div class="columns">

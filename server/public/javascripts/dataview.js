@@ -25,7 +25,8 @@ var DataView = function (_React$Component) {
         date: -1
       },
       modalActive: false,
-      downloadData: ''
+      downloadData: '',
+      downloadType: ''
     };
     _this.getData = _this.getData.bind(_this);
     _this.downloadData = _this.downloadData.bind(_this);
@@ -68,7 +69,8 @@ var DataView = function (_React$Component) {
           sort: this.state.sort
         }).then(function (res) {
           return _this3.setState({
-            downloadData: res.data
+            downloadData: res.data,
+            downloadType: type
           }, _this3.toggleModal);
         }, function (err) {
           return _this3.setState({ error: err });
@@ -81,7 +83,8 @@ var DataView = function (_React$Component) {
             delete newEntry.__v;
             delete newEntry._id;
             return newEntry;
-          }), null, 2)
+          }), null, 2),
+          downloadType: type
         }, this.toggleModal);
       }
     }
@@ -110,6 +113,7 @@ var DataView = function (_React$Component) {
   }, {
     key: 'updateFilters',
     value: function updateFilters(e) {
+      console.log(e);
       if (['all', 'flags', 'good'].includes(e)) {
         this.setState(function (state) {
           var filters = state.filters;
@@ -184,7 +188,8 @@ var DataView = function (_React$Component) {
           filters = _state.filters,
           sort = _state.sort,
           modalActive = _state.modalActive,
-          downloadData = _state.downloadData;
+          downloadData = _state.downloadData,
+          downloadType = _state.downloadType;
 
       if (error) {
         return React.createElement(
@@ -206,7 +211,7 @@ var DataView = function (_React$Component) {
         null,
         React.createElement(FilterPane, { filters: filters, updateFilters: this.updateFilters, getData: this.getData }),
         React.createElement(DataViewBar, { entriesCount: entries.length, filters: filters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
-        React.createElement(DataDownload, { isActive: modalActive, toggleModal: this.toggleModal, data: downloadData }),
+        React.createElement(DataDownload, { isActive: modalActive, toggleModal: this.toggleModal, data: downloadData, type: downloadType }),
         React.createElement(DataTable, { sort: sort, entries: entries, updateSort: this.updateSort, assignLab: this.assignLab })
       );
     }

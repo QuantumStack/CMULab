@@ -16,6 +16,7 @@ var DataDownload = function (_React$Component) {
 
     _this.fullData = React.createRef();
     _this.selectAll = _this.selectAll.bind(_this);
+    _this.download = _this.download.bind(_this);
     return _this;
   }
 
@@ -36,6 +37,21 @@ var DataDownload = function (_React$Component) {
         selection.addRange(_range);
       }
     }
+  }, {
+    key: 'download',
+    value: function (_download) {
+      function download() {
+        return _download.apply(this, arguments);
+      }
+
+      download.toString = function () {
+        return _download.toString();
+      };
+
+      return download;
+    }(function () {
+      download(this.props.data, 'data.csv', 'text/' + this.props.type);
+    })
   }, {
     key: 'render',
     value: function render() {
@@ -68,7 +84,21 @@ var DataDownload = function (_React$Component) {
                 'Select All'
               )
             ),
-            '\xA0 Full data:',
+            '\xA0',
+            React.createElement(
+              'a',
+              { className: 'button is-small is-outlined is-dark', onClick: this.download },
+              React.createElement(
+                'span',
+                { className: 'icon' },
+                React.createElement('i', { className: 'fa fa-download' })
+              ),
+              React.createElement(
+                'span',
+                null,
+                'Download'
+              )
+            ),
             React.createElement('br', null),
             React.createElement('br', null),
             React.createElement(
