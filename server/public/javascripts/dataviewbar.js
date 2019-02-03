@@ -15,14 +15,21 @@ var DataViewBar = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (DataViewBar.__proto__ || Object.getPrototypeOf(DataViewBar)).call(this, props));
 
     _this.state = {
+      deleteConfirmation: false,
       deleteActive: false
     };
+    _this.onDeleteConfirmationChange = _this.onDeleteConfirmationChange.bind(_this);
     _this.toggleDelete = _this.toggleDelete.bind(_this);
     _this.toggleThenDelete = _this.toggleThenDelete.bind(_this);
     return _this;
   }
 
   _createClass(DataViewBar, [{
+    key: 'onDeleteConfirmationChange',
+    value: function onDeleteConfirmationChange(e) {
+      this.setState({ deleteConfirmation: e.target.checked });
+    }
+  }, {
     key: 'toggleDelete',
     value: function toggleDelete() {
       this.setState(function (_ref) {
@@ -33,23 +40,24 @@ var DataViewBar = function (_React$Component) {
   }, {
     key: 'toggleThenDelete',
     value: function toggleThenDelete() {
-      this.toggleDelete();
-      this.props.deleteData();
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      bulmaQuickview.attach();
+      if (this.state.deleteConfirmation) {
+        this.toggleDelete();
+        this.setState({ deleteConfirmation: false });
+        this.props.deleteData();
+      }
     }
   }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
           filters = _props.filters,
+          toggleFilters = _props.toggleFilters,
           updateFilters = _props.updateFilters,
           getData = _props.getData,
           downloadData = _props.downloadData;
-      var deleteActive = this.state.deleteActive;
+      var _state = this.state,
+          deleteConfirmation = _state.deleteConfirmation,
+          deleteActive = _state.deleteActive;
 
       return React.createElement(
         'nav',
@@ -191,7 +199,7 @@ var DataViewBar = function (_React$Component) {
             { className: 'level-item' },
             React.createElement(
               'a',
-              { className: 'button is-small is-link', 'data-show': 'quickview', 'data-target': 'quickviewDefault' },
+              { className: 'button is-small is-link', onClick: toggleFilters },
               React.createElement(
                 'span',
                 { className: 'icon' },
@@ -234,15 +242,14 @@ var DataViewBar = function (_React$Component) {
                     'div',
                     { className: 'dropdown-item' },
                     React.createElement(
-                      'p',
-                      null,
-                      'Are you sure? You will ',
+                      'div',
+                      { className: 'field' },
                       React.createElement(
-                        'strong',
-                        null,
-                        'never'
-                      ),
-                      ' be able to recover this data.'
+                        'label',
+                        { className: 'checkbox' },
+                        React.createElement('input', { type: 'checkbox', checked: deleteConfirmation, onChange: this.onDeleteConfirmationChange }),
+                        '\xA0 I\'m sure about this'
+                      )
                     )
                   ),
                   React.createElement(

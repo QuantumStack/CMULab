@@ -11,6 +11,7 @@ class DataView extends React.Component {
       sort: {
         date: -1,
       },
+      filtersActive: false,
       modalActive: false,
       downloadData: '',
       downloadType: '',
@@ -19,6 +20,7 @@ class DataView extends React.Component {
     this.downloadData = this.downloadData.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.deleteData = this.deleteData.bind(this);
+    this.toggleFilters = this.toggleFilters.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
     this.updateSort = this.updateSort.bind(this);
     this.assignLab = this.assignLab.bind(this);
@@ -61,7 +63,7 @@ class DataView extends React.Component {
   }
 
   toggleModal() {
-    this.setState(state => ({ modalActive: !state.modalActive }));
+    this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
   }
 
   deleteData() {
@@ -72,8 +74,11 @@ class DataView extends React.Component {
     }), err => this.setState({ error: err }));
   }
 
+  toggleFilters() {
+    this.setState(({ filtersActive }) => ({ filtersActive: !filtersActive }));
+  }
+
   updateFilters(e) {
-    console.log(e);
     if (['all', 'flags', 'good'].includes(e)) {
       this.setState((state) => {
         const { filters } = state;
@@ -130,7 +135,7 @@ class DataView extends React.Component {
 
   render() {
     const {
-      error, isLoaded, entries, filters, sort, modalActive, downloadData, downloadType,
+      error, isLoaded, entries, filters, sort, filtersActive, modalActive, downloadData, downloadType,
     } = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -139,8 +144,8 @@ class DataView extends React.Component {
       return <div className='has-text-centered'>Loading...</div>;
     }
     return <div>
-      <FilterPane filters={filters} updateFilters={this.updateFilters} getData={this.getData} />
-      <DataViewBar entriesCount={entries.length} filters={filters} updateFilters={this.updateFilters} getData={this.getData} downloadData={this.downloadData} deleteData={this.deleteData} />
+      <FilterPane filters={filters} filtersActive={filtersActive} toggleFilters={this.toggleFilters} updateFilters={this.updateFilters} getData={this.getData} />
+      <DataViewBar entriesCount={entries.length} filters={filters} toggleFilters={this.toggleFilters} updateFilters={this.updateFilters} getData={this.getData} downloadData={this.downloadData} deleteData={this.deleteData} />
       <DataDownload isActive={modalActive} toggleModal={this.toggleModal} data={downloadData} type={downloadType} />
       <DataTable sort={sort} entries={entries} updateSort={this.updateSort} assignLab={this.assignLab} />
     </div>;

@@ -24,6 +24,7 @@ var DataView = function (_React$Component) {
       sort: {
         date: -1
       },
+      filtersActive: false,
       modalActive: false,
       downloadData: '',
       downloadType: ''
@@ -32,6 +33,7 @@ var DataView = function (_React$Component) {
     _this.downloadData = _this.downloadData.bind(_this);
     _this.toggleModal = _this.toggleModal.bind(_this);
     _this.deleteData = _this.deleteData.bind(_this);
+    _this.toggleFilters = _this.toggleFilters.bind(_this);
     _this.updateFilters = _this.updateFilters.bind(_this);
     _this.updateSort = _this.updateSort.bind(_this);
     _this.assignLab = _this.assignLab.bind(_this);
@@ -91,8 +93,9 @@ var DataView = function (_React$Component) {
   }, {
     key: 'toggleModal',
     value: function toggleModal() {
-      this.setState(function (state) {
-        return { modalActive: !state.modalActive };
+      this.setState(function (_ref) {
+        var modalActive = _ref.modalActive;
+        return { modalActive: !modalActive };
       });
     }
   }, {
@@ -111,9 +114,16 @@ var DataView = function (_React$Component) {
       });
     }
   }, {
+    key: 'toggleFilters',
+    value: function toggleFilters() {
+      this.setState(function (_ref2) {
+        var filtersActive = _ref2.filtersActive;
+        return { filtersActive: !filtersActive };
+      });
+    }
+  }, {
     key: 'updateFilters',
     value: function updateFilters(e) {
-      console.log(e);
       if (['all', 'flags', 'good'].includes(e)) {
         this.setState(function (state) {
           var filters = state.filters;
@@ -187,6 +197,7 @@ var DataView = function (_React$Component) {
           entries = _state.entries,
           filters = _state.filters,
           sort = _state.sort,
+          filtersActive = _state.filtersActive,
           modalActive = _state.modalActive,
           downloadData = _state.downloadData,
           downloadType = _state.downloadType;
@@ -209,8 +220,8 @@ var DataView = function (_React$Component) {
       return React.createElement(
         'div',
         null,
-        React.createElement(FilterPane, { filters: filters, updateFilters: this.updateFilters, getData: this.getData }),
-        React.createElement(DataViewBar, { entriesCount: entries.length, filters: filters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
+        React.createElement(FilterPane, { filters: filters, filtersActive: filtersActive, toggleFilters: this.toggleFilters, updateFilters: this.updateFilters, getData: this.getData }),
+        React.createElement(DataViewBar, { entriesCount: entries.length, filters: filters, toggleFilters: this.toggleFilters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
         React.createElement(DataDownload, { isActive: modalActive, toggleModal: this.toggleModal, data: downloadData, type: downloadType }),
         React.createElement(DataTable, { sort: sort, entries: entries, updateSort: this.updateSort, assignLab: this.assignLab })
       );

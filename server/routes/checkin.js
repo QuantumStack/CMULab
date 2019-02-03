@@ -74,7 +74,7 @@ router.get('/:student_id', authRequired, (req, res) => {
     // flag too many attempts if necessary
     const flagAttempts = config.get('flagAttempts');
     if (flagAttempts) {
-      // start of current day (server timezone)
+      // start of current day (UTC)
       const today = convertDate(moment().startOf('day'));
       // query entries with given student_id from today, sort by date
       Entry.find({
@@ -100,7 +100,7 @@ router.get('/:student_id', authRequired, (req, res) => {
               const validRanges = Object.values(sections);
               // loop through section times
               for (let j = 0; j < validRanges.length; j += 1) {
-                // convert section times from to server timezone
+                // convert section times from to UTC
                 const [validStart, validEnd] = parseSectionTime(validRanges[j]);
                 // check if we are currently in this section time
                 if (validStart <= now && now <= validEnd) {
@@ -141,7 +141,7 @@ router.post('/:student_id', authRequired, (req, res, next) => {
   // convert student_id to lowercase if necessary
   if (config.get('lowercaseStudents')) student_id = student_id.toLowerCase();
 
-  // start of current day (server timezone)
+  // start of current day (UTC)
   const today = convertDate(moment().startOf('day'));
   // query entries with given student_id from today and mark them as not good
   Entry.update({
