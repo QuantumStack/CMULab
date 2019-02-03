@@ -55,10 +55,12 @@ passport.use(new GoogleStrategy({
   callbackURL: `${process.env.CMULAB_LOC}/login/callback`,
   userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 }, (token, tokenSecret, profile, done) => {
+  // check if email ends with approved email domain
   const email = profile.emails[0].value;
   if (!email.endsWith(`@${config.get('emailDomain')}`)) {
     return done('Not a university user');
   }
+  // check if user is authorized in db
   const student_id = email.slice(0, email.lastIndexOf('@'));
   User.findOne({ _id: student_id }, (err, user) => {
     if (!user) return done('Not permitted');
@@ -86,7 +88,9 @@ app.use('/login', loginRouter);
 /* POST go to checkin */
 app.post('/go', (req, res) => {
   const { student_id } = req.body;
+  // if student_id is not provided, go to home page
   if (!student_id) return res.redirect('/');
+  // go to checkin page for student
   res.redirect(`/checkin/${student_id}`);
 });
 
