@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 {{#if success}}
 	<nav id="success" class="navbar is-success">
 		<div class="container">
@@ -11,7 +14,7 @@
 			</div>
 		</div>
 	</nav>
-	{{> success}}
+	<script src="/javascripts/success.js"></script>
 {{/if}}
 
 <br />
@@ -39,14 +42,6 @@
 
 <div class="tabs is-centered is-boxed is-small">
 	<ul>
-		<li class="{{#if isLab}}is-active{{/if}}">
-			<a href="/admin/lab">
-				<span class="icon is-small">
-					<i class="fa fa-flask"></i>
-		    	</span>
-				<span>Assign Lab</span>
-			</a>
-		</li>
 		<li class="{{#if isData}}is-active{{/if}}">
 			<a href="/admin/data">
 				<span class="icon is-small">
@@ -63,37 +58,20 @@
 				<span>People</span>
 			</a>
 		</li>
+		<li class="{{#if isConfig}}is-active{{/if}}">
+			<a href="/admin/config">
+				<span class="icon is-small">
+					<i class="fa fa-cog"></i>
+		    	</span>
+				<span>Settings</span>
+			</a>
+		</li>
 	</ul>
 </div>
 
 <div class="container">
 	<div class="columns">
-		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isDataView}}is-6 is-offset-3{{/unless}}">
-			{{#if isData}}
-				{{#unless isDataView}}
-					<div class="tabs is-small is-toggle is-toggle-rounded is-fullwidth">
-						<ul>
-							<li class="{{#unless isDataDelete}}is-active{{/unless}}">
-								<a href="/admin/data">
-									<span class="icon is-small">
-										<i class="fa fa-eye"></i>
-							    	</span>
-									<span>View & Download</span>
-								</a>
-							</li>
-							<li class="{{#if isDataDelete}}is-active{{/if}}">
-								<a href="/admin/delete">
-									<span class="icon is-small">
-										<i class="fa fa-eraser"></i>
-							    	</span>
-									<span>Delete</span>
-								</a>
-							</li>
-						</ul>
-					</div>
-				{{/unless}}
-			{{/if}}
-
+		<div class="column is-mobile is-10-mobile is-offset-1-mobile {{#unless isData}}is-6 is-offset-3{{/unless}}">
 			{{#if isPeople}}
 				<div class="tabs is-small is-toggle is-toggle-rounded is-fullwidth">
 					<ul>
@@ -117,17 +95,8 @@
 				</div>
 			{{/if}}
 
-			{{#if isLab}} {{> lab}} {{/if}}
 			{{#if isData}}
-				{{#if isDataView}}
-					{{> viewdata}}
-				{{else}}
-					{{#if isDataDelete}}
-						{{> delete}}
-					{{else}}
-						{{> data}}
-					{{/if}}
-				{{/if}}
+				{{> data}}
 			{{/if}}
 			{{#if isDelete}} {{> delete}} {{/if}}
 			{{#if isPeople}}
@@ -137,6 +106,7 @@
 					{{> users}}
 				{{/if}}
 			{{/if}}
+			{{#if isConfig}} {{> config}} {{/if}}
 		</div>
 	</div>
 </div>

@@ -46,24 +46,7 @@
 		</div>
 	</div>
 </form>
-
-<script>
-var file = document.getElementById("file");
-file.onchange = function() {
-    if (file.files.length > 0) {
-		document.getElementById("filename").innerHTML = file.files[0].name;
-
-		var reader = new FileReader();
-		reader.onload = (function() {
-			return function(e) {
-				document.getElementById("csv").value = e.target.result.trim();
-			};
-		})(file.files[0]);
-
-		reader.readAsText(file.files[0]);
-    }
-};
-</script>
+<script src="/javascripts/file-reader.js"></script>
 
 <br />
 

@@ -11,13 +11,15 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
+const config = require('./util/config');
+const helpers = require('./util/helpers');
 const User = require('./models/User');
 const indexRouter = require('./routes/index');
 const checkinRouter = require('./routes/checkin');
 const adminRouter = require('./routes/admin');
 const loginRouter = require('./routes/login');
-
-require('dotenv').config();
 
 const app = express();
 
@@ -27,24 +29,7 @@ app.engine('hbs', hbs({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, '/views/layouts/'),
   partialsDir: path.join(__dirname, '/views/partials/'),
-  helpers: {
-    trim: str => str.toString().slice(0, str.toString().indexOf(' (UTC')),
-    round: n => Math.round(n * 100) / 100,
-    freqreduce: (arr) => {
-      const freqs = {};
-      arr.forEach((item) => {
-        if (!freqs[item]) freqs[item] = 0;
-        freqs[item] += 1;
-      });
-      return Object.entries(freqs).sort((a, b) => b[1] - a[1])
-        .map(([item]) => item).join(', ');
-    },
-    range: (n, m) => {
-      const L = [];
-      for (let i = n; i <= m; i += 1) L.push(i);
-      return L;
-    },
-  },
+  helpers,
 }));
 app.set('view engine', 'hbs');
 
@@ -68,11 +53,14 @@ passport.use(new GoogleStrategy({
   clientID: process.env.CMULAB_GOOGLE_ID,
   clientSecret: process.env.CMULAB_GOOGLE_SECRET,
   callbackURL: `${process.env.CMULAB_LOC}/login/callback`,
+  userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 }, (token, tokenSecret, profile, done) => {
+  // check if email ends with approved email domain
   const email = profile.emails[0].value;
-  if (!email.endsWith(`@${process.env.CMULAB_EMAILDOMAIN}`)) {
+  if (!email.endsWith(`@${config.get('emailDomain')}`)) {
     return done('Not a university user');
   }
+  // check if user is authorized in db
   const student_id = email.slice(0, email.lastIndexOf('@'));
   User.findOne({ _id: student_id }, (err, user) => {
     if (!user) return done('Not permitted');
@@ -100,7 +88,9 @@ app.use('/login', loginRouter);
 /* POST go to checkin */
 app.post('/go', (req, res) => {
   const { student_id } = req.body;
+  // if student_id is not provided, go to home page
   if (!student_id) return res.redirect('/');
+  // go to checkin page for student
   res.redirect(`/checkin/${student_id}`);
 });
 
@@ -113,7 +103,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(err.status || 500);
   res.render('error', {
-    course: process.env.CMULAB_COURSE,
+    course: config.get('course'),
     loc: process.env.CMULAB_LOC,
     err,
   });

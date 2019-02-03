@@ -1,0 +1,161 @@
+<form method="POST" action="/admin/writeconfig" target="_self">
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">Course name:</label>
+				<div class="control">
+					<input class="input" name="course" type="text" value="{{config.course}}" placeholder="Example: QS-101" required>
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">Email domain:</label>
+				<div class="control">
+					<input class="input" name="emailDomain" type="text" value="{{config.emailDomain}}" placeholder="Example: quantumstack.xyz" required>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">Min score:</label>
+				<div class="control">
+					<input class="input" name="minScore" type="number" value="{{config.minScore}}" placeholder="Example: 0" required>
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">Max score:</label>
+				<div class="control">
+					<input class="input" name="maxScore" type="number" value="{{config.maxScore}}" placeholder="Example: 100" required>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p class="help">This is the offset from the course timezone to the server timezone.</p>
+	<div class="field is-horizontal">
+		<div class="field-body">
+			<div class="field">
+				<label class="label">Offset (hours):</label>
+				<div class="control">
+					<input class="input" name="offsetHours" type="number" value="{{config.offsetHours}}" placeholder="Example: 0" required>
+				</div>
+			</div>
+			<div class="field">
+				<label class="label">Offset (minutes):</label>
+				<div class="control">
+					<input class="input" name="offsetMinutes" type="number" value="{{config.offsetMinutes}}" placeholder="Example: 30" required>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="field">
+		<label class="label">Check-in options:</label>
+		<label class="checkbox">
+			<input type="hidden" name="lowercaseStudents" value="off">
+			<input type="checkbox" name="lowercaseStudents" {{checked config.lowercaseStudents}} />
+			Student IDs must be lowercase
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="radioInput" value="off">
+			<input type="checkbox" name="radioInput" {{checked config.radioInput}} />
+			Use buttons for score instead of numerical input
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="manualLab" value="off">
+			<input type="checkbox" name="manualLab" {{checked config.manualLab}} />
+			Allow manual lab entry
+		</label>
+	</div>
+	<div class="field">
+		<label class="label">Suspicious activity detection:</label>
+		<div id="student-data">
+			<p class="help">
+				{{#if studentsCount}}
+					Update data for students and section registration
+				{{else}}
+					You have enabled a feature that requires data about students and section registration for {{course}}. Please upload this information
+				{{/if}}
+				on the <a href="/admin/students">students page</a>.
+			</p>
+		</div>
+		<div id="section-data">
+			<p class="help">
+				{{#if (isNonEmpty config.sections)}}
+					Update data for sections and timeslots by uploading
+				{{else}}
+					You have enabled a feature that requires data about sections and time slots for {{course}}. Please upload this information if you haven't already as
+				{{/if}}
+				a CSV file with the header: <code>section,start_hour,start_minute,end_hour,end_minute</code>.</p>
+			<div class="field">
+				<div class="control">
+					<div class="file is-small has-name">
+						<label class="file-label">
+							<input id="file" class="file-input" type="file" />
+							<input id="csv" type="hidden" name="sections" />
+							<span class="file-cta">
+								<span class="file-icon is-small">
+									<i class="fas fa-upload"></i>
+						    	</span>
+								<span class="file-label">
+									Choose file…
+								</span>
+							</span>
+							<span id="filename" class="file-name">
+								Nothing selected
+							</span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<label class="checkbox">
+			<input type="hidden" name="flagGhosts" value="off">
+			<input id="ghosts" type="checkbox" name="flagGhosts" {{checked config.flagGhosts}} onchange="toggleStudentWarn();toggleFlagInvalid();" />
+			Flag students who aren't registered to a section
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="flagSection" value="off">
+			<input id="section" type="checkbox" name="flagSection" {{checked config.flagSection}} onchange="toggleStudentWarn();toggleSectionWarn();toggleFlagInvalid();" />
+			Warn when a student attends the wrong section time
+		</label>
+		<br />
+		<label class="checkbox">
+			<input type="hidden" name="flagAttempts" value="off">
+			<input id="attempts" type="checkbox" name="flagAttempts" {{checked config.flagAttempts}} onchange="toggleThreshold();toggleSectionWarn();toggleFlagInvalid();" />
+			Flag multiple check-ins over a day
+			<span class="select is-small">
+				<select id="attempts-type" name="flagAttempts" onchange="toggleThreshold(null, this.value);">
+					<option value="section" {{selected config.flagAttempts "section"}}>based on section</option>
+					<option value="time" {{selected config.flagAttempts "time"}}>based on time</option>
+				</select>
+			</span>
+		</label>
+		<div class="field is-horizontal" id="attempts-threshold">
+			<span>Threshold:</span>
+			&nbsp;&nbsp;
+			<p class="control">
+				<input class="input is-small" name="flagAttemptsThreshold" type="text" value="{{prettyMs config.flagAttemptsThreshold}} minutes" placeholder="Example: 1 hour">
+			</p>
+		</div>
+		<label id="invalid" class="checkbox">
+			<input type="hidden" name="flagInvalid" value="off">
+			<input type="checkbox" name="flagInvalid" {{checked config.flagInvalid}} />
+			Mark entries with flag(s) as invalid
+		</label>
+		<script src="/javascripts/config-display.js"></script>
+		<script src="/javascripts/file-reader.js"></script>
+	</div>
+	<div class="field">
+		<div class="control">
+			<button type="submit" class="button is-info">
+				<span class="icon">
+					<i class="fa fa-save"></i>
+		    	</span>
+				<span>Save</span>
+			</button>
+		</div>
+	</div>
+</form>

@@ -1,1 +1,2 @@
+pypng==0.0.19
 PyQRCode==1.2.1

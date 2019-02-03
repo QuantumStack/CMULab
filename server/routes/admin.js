@@ -2,6 +2,9 @@ const express = require('express');
 const createError = require('http-errors');
 const json2csv = require('json2csv').parse;
 const csv2json = require('csvtojson');
+const moment = require('moment');
+const config = require('./../util/config');
+const helpers = require('./../util/helpers');
 const User = require('./../models/User');
 const Entry = require('./../models/Entry');
 const Student = require('./../models/Student');
@@ -10,57 +13,87 @@ const version = require('./../util/version');
 
 const router = express.Router();
 
-/* GET admin console */
-router.get('/', adminRequired, (req, res) => {
-  res.redirect('/admin/lab');
-});
+// require admin authorization for everything at /admin
+router.use(adminRequired);
 
-router.get('/lab', adminRequired, (req, res) => {
-  res.render('admin', {
-    course: process.env.CMULAB_COURSE,
+// returns an object with the course, hosting location, and version
+function appData() {
+  return {
+    course: config.get('course'),
     loc: process.env.CMULAB_LOC,
-    isLab: true,
     version: version(),
-    success: req.query.success,
-  });
+  };
+}
+
+/* GET admin console -> data */
+router.get('/', (req, res) => {
+  res.redirect('/admin/data');
 });
 
-router.get('/data', adminRequired, (req, res) => {
+// parse a query from the data page
+function parseDataQuery(query) {
+  const options = {};
+  const { filters } = query;
+  const {
+    startDate, endDate, flags, good,
+  } = filters;
+  // special case: start and end date must be used together
+  if (startDate && endDate) {
+    // set mongo query options for date range
+    options.date = {
+      $gte: new Date(startDate),
+      $lt: new Date(endDate),
+    };
+    // delete start and end date from filters object
+    delete filters.startDate;
+    delete filters.endDate;
+  }
+  // special case: flags or not
+  if (flags) {
+    // set mongo query option for empty flags object
+    options.flags = {
+      $gt: {},
+    };
+    // delete flags from filters object
+    delete filters.flags;
+  }
+
+  // for each filter, set its value in options
+  Object.entries(filters).forEach(([param, value]) => {
+    if (value !== '') options[param] = value;
+  });
+
+  // return filter options and extracted sort from query
+  return [options, query.sort];
+}
+
+/* GET data */
+router.get('/data', (req, res) => {
   res.render('admin', {
-    course: process.env.CMULAB_COURSE,
-    loc: process.env.CMULAB_LOC,
     isData: true,
-    version: version(),
     success: req.query.success,
+    ...appData(),
   });
 });
 
-router.get('/delete', adminRequired, (req, res) => {
-  res.render('admin', {
-    course: process.env.CMULAB_COURSE,
-    loc: process.env.CMULAB_LOC,
-    isData: true,
-    isDataDelete: true,
-    version: version(),
-    success: req.query.success,
-  });
-});
-
-router.get('/users', adminRequired, (req, res, next) => {
+/* GET manage users */
+router.get('/users', (req, res, next) => {
+  // query all users and sort by _id
   User.find().sort('_id').exec((err, users) => {
     if (err) return next(createError(500, err));
+    // render page with queried data
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
       isPeople: true,
       users,
-      version: version(),
       success: req.query.success,
+      ...appData(),
     });
   });
 });
 
-router.get('/students', adminRequired, (req, res, next) => {
+/* GET manage students */
+router.get('/students', (req, res, next) => {
+  // query students with average score and list of section, sort by _id
   Entry.aggregate([{
     $group: {
       _id: '$student_id',
@@ -73,59 +106,76 @@ router.get('/students', adminRequired, (req, res, next) => {
     },
   }]).sort('_id').exec((err, students) => {
     if (err) return next(createError(500, err));
+    // render page with queried data
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
       isPeople: true,
       isPeopleStudents: true,
       students,
-      version: version(),
       success: req.query.success,
+      ...appData(),
     });
   });
 });
 
-/* GET data */
-function filterData(query) {
-  const options = {};
-  const { startDate, endDate } = query;
-  if (startDate && endDate) {
-    options.date = {
-      $gte: new Date(startDate),
-      $lt: new Date(endDate),
-    };
-    delete query.startDate;
-    delete query.endDate;
-  }
-
-  Object.entries(query).forEach(([param, value]) => {
-    if (value !== '') options[param] = value;
-  });
-
-  return options;
-}
-
-router.get('/viewdata', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
+/* GET edit config */
+router.get('/config', (req, res, next) => {
+  // count students
+  Student.count({}, (err, count) => {
     if (err) return next(createError(500, err));
+    // render page with all configs and queried count
     res.render('admin', {
-      course: process.env.CMULAB_COURSE,
-      loc: process.env.CMULAB_LOC,
-      isData: true,
-      isDataView: true,
-      entries,
-      version: version(),
+      isConfig: true,
+      config: config.all(),
+      studentsCount: count,
       success: req.query.success,
+      ...appData(),
     });
   });
 });
 
-router.get('/getcsv', adminRequired, (req, res, next) => {
-  Entry.find(filterData(req.query)).sort('date').exec((err, entries) => {
+/* POST raw data */
+router.post('/rawdata', (req, res, next) => {
+  // parse data query
+  const [options, sort] = parseDataQuery(req.body);
+  // query entries given filters and sort
+  Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
+    // send data after some modifications
+    res.send(entries.map((entry) => {
+      // convert each entry to json to get rid of helper functions
+      const newEntry = entry.toJSON();
+      // prettify date
+      newEntry.date = helpers.prettyDate(entry.date);
+      // if entry has attempt flag, prettify the time interval
+      if (newEntry.flags && newEntry.flags.attemptDiff) {
+        newEntry.flags.attemptDiff = helpers.prettyDiff(newEntry.flags.attemptDiff);
+      }
+      return newEntry;
+    }));
+  });
+});
+
+/* POST download CSV */
+router.post('/getcsv', (req, res, next) => {
+  // parse data query
+  const [options, sort] = parseDataQuery(req.body);
+  // query entries given filters and sort
+  Entry.find(options).sort(sort).exec((err, entries) => {
+    if (err) return next(createError(500, err));
+    // send data
     res.setHeader('Content-Type', 'text/csv');
+    // convert json to csv
     res.write(json2csv(entries, {
-      fields: ['student_id', 'date', 'lab', 'section', 'score', 'ta'],
+      fields: [
+        'section',
+        'student_id',
+        'score',
+        'lab',
+        'date',
+        'ta',
+        'flags',
+        'good',
+      ],
       defaultValue: '',
     }));
     return res.end();
@@ -133,40 +183,51 @@ router.get('/getcsv', adminRequired, (req, res, next) => {
 });
 
 /* POST delete data */
-router.post('/delete', adminRequired, (req, res, next) => {
-  Entry.deleteMany(filterData(req.body)).exec((err) => {
+router.post('/delete', (req, res, next) => {
+  // parse query and delete entries
+  Entry.deleteMany(parseDataQuery(req.body)[0]).exec((err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/delete?success=delete');
+    return res.send(200);
   });
 });
 
+/* POST mark entry */
+router.post('/togglegood', (req, res, next) => {
+  const { _id, good } = req.body;
+  if (!_id || good == null) {
+    return next(createError(400, 'Provide _id and good'));
+  }
+  // query entry with given _id and set good to given value
+  Entry.update({ _id }, { $set: { good } }, (err) => {
+    if (err) return next(createError(500, err));
+    return res.send(200);
+  });
+});
 
 /* POST assign lab number */
-router.post('/assignlab', adminRequired, (req, res, next) => {
-  const { startDate, endDate, lab } = req.body;
-  if (!startDate || !endDate || lab === null) {
-    return next(createError(400, 'Provide startDate, endDate, lab'));
-  }
-  Entry.updateMany({
-    date: {
-      $gte: new Date(startDate),
-      $lt: new Date(endDate),
-    },
-  }, {
-    lab,
-  }, (err) => {
+router.post('/assignlab', (req, res, next) => {
+  const { lab, preserve } = req.body;
+  if (lab == null) return next(createError(400, 'Provide lab'));
+  // parse data query
+  const options = parseDataQuery(req.body)[0];
+  // if preserve, only ask for entries with no lab already assigned
+  if (preserve) options.lab = null;
+  // query entries given filters and set lab to given value
+  Entry.updateMany(options, { lab }, (err) => {
     if (err) return next(createError(500, err));
-    return res.redirect('/admin/lab?success=lab+assign');
+    return res.send(200);
   });
 });
 
 /* POST add user */
-router.post('/adduser', adminRequired, (req, res, next) => {
+router.post('/adduser', (req, res, next) => {
   const { student_id, admin } = req.body;
   if (!student_id) return next(createError(400, 'Provide student_id'));
+  // query users for student_id given to make sure it doesn't already exist
   User.findOne({ _id: student_id }, (err, user) => {
     if (err) return next(createError(500, err));
     if (user) return next(createError(400, 'User already exists'));
+    // create new user with given _id and admin option
     User.create({
       _id: student_id,
       admin: admin === 'on',
@@ -178,12 +239,14 @@ router.post('/adduser', adminRequired, (req, res, next) => {
 });
 
 /* POST remove current user */
-router.post('/removeuser', adminRequired, (req, res, next) => {
+router.post('/removeuser', (req, res, next) => {
   const { student_id } = req.body;
   if (!student_id) return next(createError(400, 'Provide student_id'));
+  // make sure admin is not deleting themselves
   if (student_id === req.user._id) {
     return next(createError(400, 'Delete yourself?'));
   }
+  // query user with given _id and delete it
   User.remove({ _id: student_id }, (err) => {
     if (err) return next(createError(500, err));
     return res.redirect('/admin/users?success=user+delete');
@@ -191,8 +254,18 @@ router.post('/removeuser', adminRequired, (req, res, next) => {
 });
 
 /* POST enroll students */
-router.post('/enrollstudents', adminRequired, (req, res, next) => {
+router.post('/enrollstudents', (req, res, next) => {
+  if (!req.body.data) return next(createError(400, 'Provide CSV file'));
+  // parse csv file of students and section
   csv2json().fromString(req.body.data).then((json) => {
+    const columns = Object.keys(json[0]);
+    // make sure csv has correct header
+    const desired = ['_id', 'section'];
+    if (columns.toString() !== desired.toString()) {
+      return next(createError(400, 'Bad CSV columns'));
+    }
+
+    // recursively loop through rows and insert into db
     function iterItems(i, err) {
       if (err) return next(createError(500, err));
       if (i === json.length) {
@@ -203,9 +276,9 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
       Student.findOneAndUpdate({
         _id: item._id,
       }, item, { upsert: true }, (updateErr) => {
-        i += 1;
-        if (updateErr) return iterItems(i, updateErr);
-        return iterItems(i);
+        const j = i + 1;
+        if (updateErr) return iterItems(j, updateErr);
+        return iterItems(j);
       });
     }
     iterItems(0);
@@ -213,11 +286,90 @@ router.post('/enrollstudents', adminRequired, (req, res, next) => {
 });
 
 /* POST remove all students */
-router.post('/removestudents', adminRequired, (req, res, next) => {
+router.post('/removestudents', (req, res, next) => {
+  // query all students and delete them
   Student.deleteMany({}).exec((err) => {
     if (err) return next(createError(500, err));
     return res.redirect('/admin/students?success=student+registration+delete');
   });
+});
+
+/* POST write config */
+router.post('/writeconfig', (req, res, next) => {
+  const newConfig = Object.entries(req.body);
+  // recursively loop through config form and update
+  function iterItems(i, err) {
+    if (err) return next(createError(500, err));
+    if (i === newConfig.length) {
+      // save final config to disk
+      config.save((saveErr) => {
+        if (saveErr) iterItems(null, saveErr);
+        return res.redirect('/admin/config?success=settings+change');
+      });
+      return;
+    }
+
+    // extract key-value pair
+    const [key, value] = newConfig[i];
+
+    // try to parse and write the config value
+    try {
+      let v = value;
+      const type = typeof config.get(key);
+      // for flagAttemptsThreshold, parse time interval using moment
+      if (key === 'flagAttemptsThreshold') {
+        const [number, units] = v.split(' ');
+        v = moment.duration(Number.parseInt(number, 10), units).asMilliseconds();
+      // for other numerical fields, convert string to int
+      } else if (type === 'number') v = Number.parseInt(v, 10);
+      // for boolean fields, convert checkbox object to bool
+      else if (type === 'boolean') v = typeof v === 'object';
+      // for flagAttempts, convert checkbox + selection to string
+      if (key === 'flagAttempts') v = v.length === 3 ? v[2] : '';
+
+      // for sections data, parse csv file
+      if (key === 'sections') {
+        if (value) {
+          // convert csv to json
+          csv2json().fromString(value).then((json) => {
+            const columns = Object.keys(json[0]);
+            // make sure csv has correct header
+            const desired = [
+              'section',
+              'start_hour',
+              'start_minute',
+              'end_hour',
+              'end_minute',
+            ];
+            if (columns.toString() !== desired.toString()) {
+              return iterItems(null, new Error('Bad CSV columns'));
+            }
+
+            v = {};
+            // loop through rows and convert them to section time objects
+            json.forEach((item) => {
+              v[item.section] = item;
+              delete v[item.section].section;
+            });
+            // write section data as json object in configs
+            config.write(key, v);
+            iterItems(i + 1);
+          });
+        } else {
+          iterItems(i + 1);
+        }
+      } else {
+        // write key-value and proceed
+        config.write(key, v);
+        iterItems(i + 1);
+      }
+      return false;
+    // in case of error...
+    } catch (newErr) {
+      iterItems(i + 1, newErr);
+    }
+  }
+  iterItems(0);
 });
 
 module.exports = router;
