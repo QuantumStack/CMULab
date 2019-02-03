@@ -2,10 +2,16 @@ class DataViewBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      deleteConfirmation: false,
       deleteActive: false,
     };
+    this.onDeleteConfirmationChange = this.onDeleteConfirmationChange.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
     this.toggleThenDelete = this.toggleThenDelete.bind(this);
+  }
+
+  onDeleteConfirmationChange(e) {
+    this.setState({ deleteConfirmation: e.target.checked });
   }
 
   toggleDelete() {
@@ -13,19 +19,18 @@ class DataViewBar extends React.Component {
   }
 
   toggleThenDelete() {
-    this.toggleDelete();
-    this.props.deleteData();
-  }
-
-  componentDidMount() {
-    bulmaQuickview.attach();
+    if (this.state.deleteConfirmation) {
+      this.toggleDelete();
+      this.setState({ deleteConfirmation: false });
+      this.props.deleteData();
+    }
   }
 
   render() {
     const {
-      filters, updateFilters, getData, downloadData,
+      filters, toggleFilters, updateFilters, getData, downloadData,
     } = this.props;
-    const { deleteActive } = this.state;
+    const { deleteConfirmation, deleteActive } = this.state;
     return <nav className='level'>
       <div className='level-left'>
         <div className='level-item'>
@@ -85,7 +90,7 @@ class DataViewBar extends React.Component {
           }
         </p>
         <p className='level-item'>
-          <a className='button is-small is-link' data-show='quickview' data-target='quickviewDefault'>
+          <a className='button is-small is-link' onClick={toggleFilters}>
             <span className='icon'>
               <i className='fa fa-filter'></i>
               </span>
@@ -103,7 +108,13 @@ class DataViewBar extends React.Component {
             <div className='dropdown-menu' role='menu'>
               <div className='dropdown-content'>
                 <div className='dropdown-item'>
-                  <p>Are you sure? You will <strong>never</strong> be able to recover this data.</p>
+                  <div className='field'>
+                    <label className='checkbox'>
+                      <input type='checkbox' checked={deleteConfirmation} onChange={this.onDeleteConfirmationChange} />
+                      &nbsp;
+                      I'm sure about this
+                    </label>
+                  </div>
                 </div>
                 <a className='dropdown-item has-text-danger' onClick={this.toggleThenDelete}>
                   <span className='icon'>

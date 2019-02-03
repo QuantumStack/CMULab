@@ -1,7 +1,7 @@
 const config = require('./config');
 
-// convert date from course to server timezone
-// if s = -1, convert date from server to course timezone
+// convert date from course to UTC
+// if s = -1, convert date from UTC to course timezone
 // if v = false, return a moment object instead of ms since epoch
 module.exports = (m, s = 1, v = true) => {
   const hours = config.get('offsetHours') * s;

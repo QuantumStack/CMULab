@@ -36,12 +36,14 @@ var FilterPane = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           filters = _props.filters,
+          filtersActive = _props.filtersActive,
+          toggleFilters = _props.toggleFilters,
           updateFilters = _props.updateFilters,
           getData = _props.getData;
 
       return React.createElement(
         'div',
-        { id: 'quickviewDefault', className: 'quickview' },
+        { className: 'quickview ' + (filtersActive ? 'is-active' : '') },
         React.createElement(
           'header',
           { className: 'quickview-header' },
@@ -55,7 +57,7 @@ var FilterPane = function (_React$Component) {
               React.createElement('i', { className: 'fas fa-filter' })
             )
           ),
-          React.createElement('span', { className: 'delete', 'data-dismiss': 'quickview' })
+          React.createElement('span', { className: 'delete', onClick: toggleFilters })
         ),
         React.createElement(
           'div',

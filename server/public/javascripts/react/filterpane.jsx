@@ -13,8 +13,8 @@ class FilterPane extends React.Component {
   }
 
   render() {
-    const { filters, updateFilters, getData } = this.props;
-    return <div id='quickviewDefault' className='quickview'>
+    const { filters, filtersActive, toggleFilters, updateFilters, getData } = this.props;
+    return <div className={`quickview ${filtersActive ? 'is-active' : ''}`}>
       <header className='quickview-header'>
         <p className='title'>
           Filter Data
@@ -22,7 +22,7 @@ class FilterPane extends React.Component {
             <i className='fas fa-filter'></i>
           </span>
         </p>
-        <span className='delete' data-dismiss='quickview'></span>
+        <span className='delete' onClick={toggleFilters}></span>
       </header>
 
       <div className='quickview-body'>
