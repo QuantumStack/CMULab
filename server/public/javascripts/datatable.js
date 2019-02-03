@@ -82,7 +82,7 @@ var DataTable = function (_React$Component) {
 
               return React.createElement(
                 'th',
-                null,
+                { key: name },
                 name === 'lab' && React.createElement(
                   'div',
                   { className: 'dropdown is-hoverable' },

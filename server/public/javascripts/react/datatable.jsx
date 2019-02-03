@@ -44,7 +44,7 @@ class DataTable extends React.Component {
       <thead>
         <tr>
         {columns.map(([title, name]) => (
-          <th>
+          <th key={name}>
             {name === 'lab' &&
               <div className='dropdown is-hoverable'>
                 <div className='dropdown-trigger'>
