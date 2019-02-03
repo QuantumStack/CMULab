@@ -1,12 +1,31 @@
 class DataViewBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteActive: false,
+    };
+    this.toggleDelete = this.toggleDelete.bind(this);
+    this.toggleThenDelete = this.toggleThenDelete.bind(this);
+  }
+
+  toggleDelete() {
+    this.setState(({ deleteActive }) => ({ deleteActive: !deleteActive }));
+  }
+
+  toggleThenDelete() {
+    this.toggleDelete();
+    this.props.deleteData();
+  }
+
   componentDidMount() {
     bulmaQuickview.attach();
   }
 
   render() {
     const {
-      filters, updateFilters, getData, downloadData, deleteData,
+      filters, updateFilters, getData, downloadData,
     } = this.props;
+    const { deleteActive } = this.state;
     return <nav className='level'>
       <div className='level-left'>
         <div className='level-item'>
@@ -74,8 +93,8 @@ class DataViewBar extends React.Component {
           </a>
         </p>
         <p className='level-item'>
-          <div className='dropdown is-hoverable is-right'>
-            <a className='button is-small is-danger dropdown-trigger'>
+          <div className={`dropdown is-right ${deleteActive ? 'is-active' : ''}`}>
+            <a className='button is-small is-danger dropdown-trigger' onClick={this.toggleDelete}>
               <span className='icon'>
                 <i className='fa fa-eraser'></i>
                 </span>
@@ -86,7 +105,7 @@ class DataViewBar extends React.Component {
                 <div className='dropdown-item'>
                   <p>Are you sure? You will <strong>never</strong> be able to recover this data.</p>
                 </div>
-                <a className='dropdown-item has-text-danger' onClick={deleteData}>
+                <a className='dropdown-item has-text-danger' onClick={this.toggleThenDelete}>
                   <span className='icon'>
                     <i className='fa fa-trash'></i>
                     </span>

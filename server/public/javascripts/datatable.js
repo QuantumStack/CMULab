@@ -18,9 +18,10 @@ var DataTable = function (_React$Component) {
 
     _this.state = {
       lab: '',
-      preserve: false,
-      isDone: false
+      labActive: false,
+      preserve: false
     };
+    _this.toggleLab = _this.toggleLab.bind(_this);
     _this.onChangeLab = _this.onChangeLab.bind(_this);
     _this.onChangePreserve = _this.onChangePreserve.bind(_this);
     _this.sendLab = _this.sendLab.bind(_this);
@@ -28,6 +29,14 @@ var DataTable = function (_React$Component) {
   }
 
   _createClass(DataTable, [{
+    key: 'toggleLab',
+    value: function toggleLab() {
+      this.setState(function (_ref) {
+        var labActive = _ref.labActive;
+        return { labActive: !labActive };
+      });
+    }
+  }, {
     key: 'onChangeLab',
     value: function onChangeLab(e) {
       this.setState({ lab: e.target.value });
@@ -40,30 +49,25 @@ var DataTable = function (_React$Component) {
   }, {
     key: 'sendLab',
     value: function sendLab(f) {
-      var _this2 = this;
-
+      this.toggleLab();
       f.preventDefault();
       var _state = this.state,
           lab = _state.lab,
           preserve = _state.preserve;
 
       this.props.assignLab(lab, preserve);
-      this.setState({ lab: '', isDone: true }, function () {
-        return setTimeout(function () {
-          _this2.setState({ isDone: false });
-        }, 5000);
-      });
+      this.setState({ lab: '' });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _props = this.props,
           sort = _props.sort,
           entries = _props.entries,
           updateSort = _props.updateSort;
-      var isDone = this.state.isDone;
+      var labActive = this.state.labActive;
 
       var columns = [['Section', 'section'], ['Student ID', 'student_id'], ['Score', 'score'], ['Lab', 'lab'], ['Date', 'date'], ['TA', 'ta'], ['Flags', 'flags']];
       return React.createElement(
@@ -75,23 +79,23 @@ var DataTable = function (_React$Component) {
           React.createElement(
             'tr',
             null,
-            columns.map(function (_ref) {
-              var _ref2 = _slicedToArray(_ref, 2),
-                  title = _ref2[0],
-                  name = _ref2[1];
+            columns.map(function (_ref2) {
+              var _ref3 = _slicedToArray(_ref2, 2),
+                  title = _ref3[0],
+                  name = _ref3[1];
 
               return React.createElement(
                 'th',
                 { key: name },
                 name === 'lab' && React.createElement(
                   'div',
-                  { className: 'dropdown is-hoverable' },
+                  { className: 'dropdown ' + (labActive ? 'is-active' : '') },
                   React.createElement(
                     'div',
                     { className: 'dropdown-trigger' },
                     React.createElement(
                       'a',
-                      { className: 'tooltip', 'data-tooltip': 'Assign lab' },
+                      { className: 'tooltip', 'data-tooltip': 'Assign lab', onClick: _this2.toggleLab },
                       React.createElement(
                         'span',
                         { className: 'icon has-text-info' },
@@ -110,14 +114,14 @@ var DataTable = function (_React$Component) {
                         { className: 'dropdown-item' },
                         React.createElement(
                           'form',
-                          { onSubmit: _this3.sendLab },
+                          { onSubmit: _this2.sendLab },
                           React.createElement(
                             'div',
                             { className: 'field' },
                             React.createElement(
                               'div',
                               { className: 'control' },
-                              React.createElement('input', { className: 'input is-small', type: 'text', placeholder: 'Example: quacks lab', onChange: _this3.onChangeLab, required: true })
+                              React.createElement('input', { className: 'input is-small', type: 'text', placeholder: 'Example: quacks lab', onChange: _this2.onChangeLab })
                             )
                           ),
                           React.createElement(
@@ -126,7 +130,7 @@ var DataTable = function (_React$Component) {
                             React.createElement(
                               'label',
                               { className: 'checkbox' },
-                              React.createElement('input', { type: 'checkbox', onChange: _this3.onChangePreserve }),
+                              React.createElement('input', { type: 'checkbox', onChange: _this2.onChangePreserve }),
                               '\xA0 Preserve existing lab designations'
                             )
                           ),
@@ -149,11 +153,6 @@ var DataTable = function (_React$Component) {
                                   null,
                                   'Submit'
                                 )
-                              ),
-                              isDone && React.createElement(
-                                'span',
-                                { className: 'has-text-success' },
-                                '\xA0Done!'
                               )
                             )
                           )

@@ -9,13 +9,34 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DataViewBar = function (_React$Component) {
   _inherits(DataViewBar, _React$Component);
 
-  function DataViewBar() {
+  function DataViewBar(props) {
     _classCallCheck(this, DataViewBar);
 
-    return _possibleConstructorReturn(this, (DataViewBar.__proto__ || Object.getPrototypeOf(DataViewBar)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (DataViewBar.__proto__ || Object.getPrototypeOf(DataViewBar)).call(this, props));
+
+    _this.state = {
+      deleteActive: false
+    };
+    _this.toggleDelete = _this.toggleDelete.bind(_this);
+    _this.toggleThenDelete = _this.toggleThenDelete.bind(_this);
+    return _this;
   }
 
   _createClass(DataViewBar, [{
+    key: 'toggleDelete',
+    value: function toggleDelete() {
+      this.setState(function (_ref) {
+        var deleteActive = _ref.deleteActive;
+        return { deleteActive: !deleteActive };
+      });
+    }
+  }, {
+    key: 'toggleThenDelete',
+    value: function toggleThenDelete() {
+      this.toggleDelete();
+      this.props.deleteData();
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       bulmaQuickview.attach();
@@ -27,8 +48,8 @@ var DataViewBar = function (_React$Component) {
           filters = _props.filters,
           updateFilters = _props.updateFilters,
           getData = _props.getData,
-          downloadData = _props.downloadData,
-          deleteData = _props.deleteData;
+          downloadData = _props.downloadData;
+      var deleteActive = this.state.deleteActive;
 
       return React.createElement(
         'nav',
@@ -188,10 +209,10 @@ var DataViewBar = function (_React$Component) {
             { className: 'level-item' },
             React.createElement(
               'div',
-              { className: 'dropdown is-hoverable is-right' },
+              { className: 'dropdown is-right ' + (deleteActive ? 'is-active' : '') },
               React.createElement(
                 'a',
-                { className: 'button is-small is-danger dropdown-trigger' },
+                { className: 'button is-small is-danger dropdown-trigger', onClick: this.toggleDelete },
                 React.createElement(
                   'span',
                   { className: 'icon' },
@@ -226,7 +247,7 @@ var DataViewBar = function (_React$Component) {
                   ),
                   React.createElement(
                     'a',
-                    { className: 'dropdown-item has-text-danger', onClick: deleteData },
+                    { className: 'dropdown-item has-text-danger', onClick: this.toggleThenDelete },
                     React.createElement(
                       'span',
                       { className: 'icon' },

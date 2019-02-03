@@ -3,12 +3,17 @@ class DataTable extends React.Component {
     super(props);
     this.state = {
       lab: '',
+      labActive: false,
       preserve: false,
-      isDone: false,
     };
+    this.toggleLab = this.toggleLab.bind(this);
     this.onChangeLab = this.onChangeLab.bind(this);
     this.onChangePreserve = this.onChangePreserve.bind(this);
     this.sendLab = this.sendLab.bind(this);
+  }
+
+  toggleLab() {
+    this.setState(({ labActive }) => ({ labActive: !labActive }));
   }
 
   onChangeLab(e) {
@@ -20,17 +25,16 @@ class DataTable extends React.Component {
   }
 
   sendLab(f) {
+    this.toggleLab();
     f.preventDefault();
     const { lab, preserve } = this.state;
     this.props.assignLab(lab, preserve);
-    this.setState({ lab: '', isDone: true }, () => setTimeout(() => {
-      this.setState({ isDone: false });
-    }, 5000));
+    this.setState({ lab: '' });
   }
 
   render() {
     const { sort, entries, updateSort } = this.props;
-    const { isDone } = this.state;
+    const { labActive } = this.state;
     const columns = [
       ['Section', 'section'],
       ['Student ID', 'student_id'],
@@ -46,9 +50,9 @@ class DataTable extends React.Component {
         {columns.map(([title, name]) => (
           <th key={name}>
             {name === 'lab' &&
-              <div className='dropdown is-hoverable'>
+              <div className={`dropdown ${labActive ? 'is-active' : ''}`}>
                 <div className='dropdown-trigger'>
-                  <a className='tooltip' data-tooltip='Assign lab'>
+                  <a className='tooltip' data-tooltip='Assign lab' onClick={this.toggleLab}>
                     <span className='icon has-text-info'>
                       <i className='fas fa-pencil-alt'></i>
                     </span>
@@ -60,7 +64,7 @@ class DataTable extends React.Component {
                       <form onSubmit={this.sendLab}>
                         <div className='field'>
                           <div className='control'>
-                            <input className='input is-small' type='text' placeholder='Example: quacks lab' onChange={this.onChangeLab} required />
+                            <input className='input is-small' type='text' placeholder='Example: quacks lab' onChange={this.onChangeLab} />
                           </div>
                         </div>
                         <div className='field'>
@@ -78,7 +82,6 @@ class DataTable extends React.Component {
                                 </span>
                               <span>Submit</span>
                             </button>
-                            {isDone && <span className='has-text-success'>&nbsp;Done!</span>}
                           </div>
                         </div>
                       </form>
