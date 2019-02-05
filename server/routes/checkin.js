@@ -25,7 +25,9 @@ function parseSectionTime(data) {
 
 /* GET checkin form */
 router.get('/:student_id', authRequired, (req, res) => {
-  const { student_id } = req.params;
+  let { student_id } = req.params;
+  // convert student_id to lowercase if necessary
+  if (config.get('lowercaseStudents')) student_id = student_id.toLowerCase();
   // query student with given _id
   Student.findOne({ _id: student_id }, (err, student) => {
     let section;
