@@ -190,6 +190,9 @@ router.post('/:student_id', authRequired, (req, res, next) => {
             <br /><span style="font-weight: bold">Time:</span> ${convertDate(moment(date), -1, false).format('MMMM Do YYYY, h:mm:ss a')}
             <br /><span style="font-weight: bold">TA:</span> ${req.user._id}</p>
 
+            <p>Best,<br />${config.get('course')} Staff</p>
+
+
             <small>&copy; <a href="https://quantumstack.xyz/?ref=cmulab">QuantumStack</a> 2019</small>
           `,
         };
