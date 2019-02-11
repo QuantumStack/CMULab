@@ -167,8 +167,8 @@ router.post('/getcsv', (req, res, next) => {
     // convert json to csv
     res.write(json2csv(entries, {
       fields: [
-        'section',
         'student_id',
+        'section',
         'score',
         'lab',
         'date',
