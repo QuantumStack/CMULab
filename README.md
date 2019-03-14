@@ -1,5 +1,9 @@
 # CMULab
 
+<div align="right"><sup>
+  made with ❤️ in Pittsburgh, PA by <a href="https://quantumstack.xyz">QuantumStack</a>
+</sup></div>
+
 Secure check-in and scoring. Easy for instructors, easy for students. By [QuantumStack](https://quantumstack.xyz/), built with love in Pittsburgh, Pennsylvania.
 
 ## Features
