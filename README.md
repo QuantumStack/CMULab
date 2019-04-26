@@ -30,11 +30,11 @@ Learn more [here](https://cmulab.quantumstack.xyz)
 
 ## Images
 
-![Home Page](https://i.imgur.com/DxFn4NR.jpg)
+![Home page](https://i.imgur.com/lqJ0iND.png)
 
-![Checkin Page](https://i.imgur.com/NkSU5vm.jpg)
+![Check-in a student](https://i.imgur.com/Cy0danI.png)
 
-![Administration Page](https://i.imgur.com/RxAPdSZ.png)
+![Settings for administrators](https://i.imgur.com/5IIMK5E.png)
 
 ## Contributing
 
