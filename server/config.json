@@ -5,6 +5,7 @@
   "offsetMinutes": 0,
   "minScore": 0,
   "maxScore": 3,
+  "showDelete": true,
   "lowercaseStudents": false,
   "radioInput": true,
   "manualLab": false,
