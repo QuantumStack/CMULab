@@ -50,6 +50,7 @@ var DataViewBar = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          showDelete = _props.showDelete,
           filters = _props.filters,
           toggleFilters = _props.toggleFilters,
           updateFilters = _props.updateFilters,
@@ -212,7 +213,7 @@ var DataViewBar = function (_React$Component) {
               )
             )
           ),
-          React.createElement(
+          showDelete && React.createElement(
             'p',
             { className: 'level-item' },
             React.createElement(

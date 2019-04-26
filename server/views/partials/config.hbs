@@ -48,6 +48,12 @@
 			</div>
 		</div>
 	</div>
+	<label class="checkbox">
+		<input type="hidden" name="showDelete" value="off">
+		<input type="checkbox" name="showDelete" {{checked config.showDelete}} />
+		Show delete button in data view
+	</label>
+	<br />
 	<div class="field">
 		<label class="label">Check-in options:</label>
 		<label class="checkbox">
@@ -144,6 +150,11 @@
 			<input type="hidden" name="flagInvalid" value="off">
 			<input type="checkbox" name="flagInvalid" {{checked config.flagInvalid}} />
 			Mark entries with flag(s) as invalid
+		</label>
+		<label class="checkbox">
+			<input type="hidden" name="allowOverride" value="off">
+			<input type="checkbox" name="allowOverride" {{checked config.allowOverride}} />
+			Allow flag override at check-in
 		</label>
 		<script src="/javascripts/config-display.js"></script>
 		<script src="/javascripts/file-reader.js"></script>

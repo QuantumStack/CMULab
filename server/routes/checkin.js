@@ -42,6 +42,7 @@ router.get('/:student_id', authRequired, (req, res) => {
         section,
         radio: config.get('radioInput'),
         lab: config.get('manualLab'),
+        allowOverride: config.get('allowOverride'),
         minscore: Number.parseInt(config.get('minScore'), 10),
         maxscore: Number.parseInt(config.get('maxScore'), 10),
         flags,
@@ -130,7 +131,9 @@ router.get('/:student_id', authRequired, (req, res) => {
 
 /* POST checkin data */
 router.post('/:student_id', authRequired, (req, res, next) => {
-  const { section, score, flags } = req.body;
+  const {
+    section, score, flags, override,
+  } = req.body;
   if (!section || !score) {
     return next(createError(400, 'Provide section and score'));
   }
@@ -169,6 +172,9 @@ router.post('/:student_id', authRequired, (req, res, next) => {
       options.flags = JSON.parse(flags);
       // mark new entry as not good if necessary
       if (config.get('flagInvalid')) options.good = false;
+      // mark new entry as good if check-in override
+      const allowOverride = config.get('allowOverride');
+      if (allowOverride && override === 'good') options.good = true;
     }
     // save entry to db
     Entry.create(options, (createErr) => {

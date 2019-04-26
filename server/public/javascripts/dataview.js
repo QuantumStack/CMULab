@@ -17,6 +17,7 @@ var DataView = function (_React$Component) {
     _this.state = {
       error: null,
       isLoaded: false,
+      showData: true,
       entries: [],
       filters: {
         good: true
@@ -49,10 +50,9 @@ var DataView = function (_React$Component) {
         filters: this.state.filters,
         sort: this.state.sort
       }).then(function (res) {
-        return _this2.setState({
-          isLoaded: true,
-          entries: res.data
-        });
+        return _this2.setState(Object.assign({
+          isLoaded: true
+        }, res.data));
       }, function (err) {
         return _this2.setState({
           isLoaded: true,
@@ -194,6 +194,7 @@ var DataView = function (_React$Component) {
       var _state = this.state,
           error = _state.error,
           isLoaded = _state.isLoaded,
+          showDelete = _state.showDelete,
           entries = _state.entries,
           filters = _state.filters,
           sort = _state.sort,
@@ -221,7 +222,7 @@ var DataView = function (_React$Component) {
         'div',
         null,
         React.createElement(FilterPane, { filters: filters, filtersActive: filtersActive, toggleFilters: this.toggleFilters, updateFilters: this.updateFilters, getData: this.getData }),
-        React.createElement(DataViewBar, { entriesCount: entries.length, filters: filters, toggleFilters: this.toggleFilters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
+        React.createElement(DataViewBar, { showDelete: showDelete, entriesCount: entries.length, filters: filters, toggleFilters: this.toggleFilters, updateFilters: this.updateFilters, getData: this.getData, downloadData: this.downloadData, deleteData: this.deleteData }),
         React.createElement(DataDownload, { isActive: modalActive, toggleModal: this.toggleModal, data: downloadData, type: downloadType }),
         React.createElement(DataTable, { sort: sort, entries: entries, updateSort: this.updateSort, assignLab: this.assignLab })
       );

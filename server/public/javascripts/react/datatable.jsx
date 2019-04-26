@@ -2,16 +2,22 @@ class DataTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      studentVisibility: false,
       lab: '',
       labActive: false,
       preserve: false,
     };
+    this.toggleStudentVisibility = this.toggleStudentVisibility.bind(this);
     this.toggleLab = this.toggleLab.bind(this);
     this.onChangeLab = this.onChangeLab.bind(this);
     this.onChangePreserve = this.onChangePreserve.bind(this);
     this.sendLab = this.sendLab.bind(this);
   }
 
+  toggleStudentVisibility() {
+    this.setState(({ studentVisibility }) => ({ studentVisibility: !studentVisibility }));
+  }
+  
   toggleLab() {
     this.setState(({ labActive }) => ({ labActive: !labActive }));
   }
@@ -34,7 +40,7 @@ class DataTable extends React.Component {
 
   render() {
     const { sort, entries, updateSort } = this.props;
-    const { labActive } = this.state;
+    const { studentVisibility, labActive } = this.state;
     const columns = [
       ['Section', 'section'],
       ['Student ID', 'student_id'],
@@ -98,13 +104,20 @@ class DataTable extends React.Component {
                 </span>
               }
             </span>
+            {name === 'student_id' &&
+              <a className='tooltip' data-tooltip='Toggle visibility' onClick={this.toggleStudentVisibility}>
+                <span className='icon has-text-info'>
+                  <i className={`fas fa-${studentVisibility ? 'eye-slash' : 'eye'}`}></i>
+                </span>
+              </a>
+            }
           </th>
         ))}
         </tr>
       </thead>
       <tbody>
         {entries.map(entry => (
-          <DataRow key={entry._id} {...entry} />
+          <DataRow showStudent={studentVisibility} key={entry._id} {...entry} />
         ))}
       </tbody>
     </table>;

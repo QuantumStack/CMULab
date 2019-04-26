@@ -5,6 +5,7 @@
   "offsetMinutes": 0,
   "minScore": 0,
   "maxScore": 3,
+  "showDelete": true,
   "lowercaseStudents": false,
   "radioInput": true,
   "manualLab": false,
@@ -12,5 +13,6 @@
   "flagAttempts": "",
   "flagAttemptsThreshold": 3600000,
   "flagGhosts": true,
+  "allowOverride": true,
   "sections": {}
 }

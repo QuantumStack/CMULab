@@ -53,6 +53,7 @@ var DataRow = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          showStudent = _props.showStudent,
           _id = _props._id,
           section = _props.section,
           student_id = _props.student_id,
@@ -76,7 +77,7 @@ var DataRow = function (_React$Component) {
         React.createElement(
           'td',
           null,
-          student_id
+          showStudent ? student_id : '••••••'
         ),
         React.createElement(
           'td',
