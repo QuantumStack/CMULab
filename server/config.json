@@ -13,5 +13,6 @@
   "flagAttempts": "",
   "flagAttemptsThreshold": 3600000,
   "flagGhosts": true,
+  "allowOverride": true,
   "sections": {}
 }
