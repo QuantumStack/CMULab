@@ -2,24 +2,27 @@
 	<nav id="flags" class="navbar is-danger">
 		<div class="container">
 			<div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-				<div class="notification is-danger has-text-centered">
+				<div id="flag-notification" class="notification is-danger has-text-centered">
 					<span class="icon">
-						<i class="fa fa-exclamation-triangle"></i>
-			    	</span>
-			    	<strong>
-			    		{{#if flags.ghost}}
-			    			Student is not registered for {{course}}.
-		    			{{/if}}
-		    			{{#if flags.attempt}}
-		    				{{student}} was checked in {{prettyDiff flags.attemptDiff}} ago{{#if flags.attemptSection}} to section {{flags.attemptSection}}{{/if}} for {{flags.attemptScore}} points.
-	    				{{/if}}
-			    		{{#if flags.section}}
-			    			This is wrong section time for {{student}}.
-		    			{{/if}}
-		    			<u><a onclick="flagDismiss();">Dismiss</a></u>
-		    			<script src="/javascripts/flag-dismiss.js"></script>
-			    	</strong>
-		    	</div>
+						<i id="flag-icon" class="fa fa-exclamation-triangle"></i>
+					</span>
+					<strong>
+						{{#if flags.ghost}}
+							Student is not registered for {{course}}.
+						{{/if}}
+						{{#if flags.attempt}}
+							{{student}} was checked in {{prettyDiff flags.attemptDiff}} ago{{#if flags.attemptSection}} to section {{flags.attemptSection}}{{/if}} for {{flags.attemptScore}} points.
+						{{/if}}
+						{{#if flags.section}}
+							This is wrong section time for {{student}}.
+						{{/if}}
+						{{#if allowOverride}}
+							<u><a id="flag-toggle" onclick="flagOverride();">Override</a></u>
+						{{/if}}
+						<u><a onclick="flagDismiss();">Dismiss</a></u>
+						<script src="/javascripts/flag-manipulation.js"></script>
+					</strong>
+				</div>
 			</div>
 		</div>
 	</nav>
@@ -43,6 +46,7 @@
 					<form method="post" action="/checkin/{{student}}">
 						{{#if (isNonEmpty flags)}}
 							<input type="hidden" name="flags" value="{{toString flags}}" />
+							<input id="override" type="hidden" name="override" value="" />
 						{{/if}}
 						{{#if lab}}
 							<div class="field">
