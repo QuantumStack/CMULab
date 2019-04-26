@@ -13,6 +13,8 @@ Secure check-in and scoring. Easy for instructors, easy for students.
 - Automatically generates QR codes for check-in
 - Easily export data to CSV, with filters
 - Add/remove users from comprehensive admin console
+- Flag suspicious activity automatically
+- Enforce lab section timeslots
 
 Learn more [here](https://cmulab.quantumstack.xyz)
 
