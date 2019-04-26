@@ -28,7 +28,7 @@ class DataViewBar extends React.Component {
 
   render() {
     const {
-      filters, toggleFilters, updateFilters, getData, downloadData,
+      showDelete, filters, toggleFilters, updateFilters, getData, downloadData,
     } = this.props;
     const { deleteConfirmation, deleteActive } = this.state;
     return <nav className='level'>
@@ -97,35 +97,37 @@ class DataViewBar extends React.Component {
             <span>More Filters</span>
           </a>
         </p>
-        <p className='level-item'>
-          <div className={`dropdown is-right ${deleteActive ? 'is-active' : ''}`}>
-            <a className='button is-small is-danger dropdown-trigger' onClick={this.toggleDelete}>
-              <span className='icon'>
-                <i className='fa fa-eraser'></i>
-                </span>
-              <span>Delete</span>
-            </a>
-            <div className='dropdown-menu' role='menu'>
-              <div className='dropdown-content'>
-                <div className='dropdown-item'>
-                  <div className='field'>
-                    <label className='checkbox'>
-                      <input type='checkbox' checked={deleteConfirmation} onChange={this.onDeleteConfirmationChange} />
-                      &nbsp;
-                      I'm sure about this
-                    </label>
+        {showDelete && 
+          <p className='level-item'>
+            <div className={`dropdown is-right ${deleteActive ? 'is-active' : ''}`}>
+              <a className='button is-small is-danger dropdown-trigger' onClick={this.toggleDelete}>
+                <span className='icon'>
+                  <i className='fa fa-eraser'></i>
+                  </span>
+                <span>Delete</span>
+              </a>
+              <div className='dropdown-menu' role='menu'>
+                <div className='dropdown-content'>
+                  <div className='dropdown-item'>
+                    <div className='field'>
+                      <label className='checkbox'>
+                        <input type='checkbox' checked={deleteConfirmation} onChange={this.onDeleteConfirmationChange} />
+                        &nbsp;
+                        I'm sure about this
+                      </label>
+                    </div>
                   </div>
+                  <a className='dropdown-item has-text-danger' onClick={this.toggleThenDelete}>
+                    <span className='icon'>
+                      <i className='fa fa-trash'></i>
+                      </span>
+                    <span><strong>Permanently Delete</strong></span>
+                  </a>
                 </div>
-                <a className='dropdown-item has-text-danger' onClick={this.toggleThenDelete}>
-                  <span className='icon'>
-                    <i className='fa fa-trash'></i>
-                    </span>
-                  <span><strong>Permanently Delete</strong></span>
-                </a>
               </div>
             </div>
-          </div>
-        </p>
+          </p>
+        }
       </div>
     </nav>;
   }

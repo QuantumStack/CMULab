@@ -35,7 +35,7 @@ function parseDataQuery(query) {
   const options = {};
   const { filters } = query;
   const {
-    startDate, endDate, flags, good,
+    startDate, endDate, flags,
   } = filters;
   // special case: start and end date must be used together
   if (startDate && endDate) {
@@ -141,17 +141,20 @@ router.post('/rawdata', (req, res, next) => {
   Entry.find(options).sort(sort).exec((err, entries) => {
     if (err) return next(createError(500, err));
     // send data after some modifications
-    res.send(entries.map((entry) => {
-      // convert each entry to json to get rid of helper functions
-      const newEntry = entry.toJSON();
-      // prettify date
-      newEntry.date = helpers.prettyDate(entry.date);
-      // if entry has attempt flag, prettify the time interval
-      if (newEntry.flags && newEntry.flags.attemptDiff) {
-        newEntry.flags.attemptDiff = helpers.prettyDiff(newEntry.flags.attemptDiff);
-      }
-      return newEntry;
-    }));
+    res.send({
+      showDelete: config.get('showDelete'),
+      entries: entries.map((entry) => {
+        // convert each entry to json to get rid of helper functions
+        const newEntry = entry.toJSON();
+        // prettify date
+        newEntry.date = helpers.prettyDate(entry.date);
+        // if entry has attempt flag, prettify the time interval
+        if (newEntry.flags && newEntry.flags.attemptDiff) {
+          newEntry.flags.attemptDiff = helpers.prettyDiff(newEntry.flags.attemptDiff);
+        }
+        return newEntry;
+      }),
+    });
   });
 });
 

@@ -17,10 +17,12 @@ var DataTable = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (DataTable.__proto__ || Object.getPrototypeOf(DataTable)).call(this, props));
 
     _this.state = {
+      studentVisibility: false,
       lab: '',
       labActive: false,
       preserve: false
     };
+    _this.toggleStudentVisibility = _this.toggleStudentVisibility.bind(_this);
     _this.toggleLab = _this.toggleLab.bind(_this);
     _this.onChangeLab = _this.onChangeLab.bind(_this);
     _this.onChangePreserve = _this.onChangePreserve.bind(_this);
@@ -29,10 +31,18 @@ var DataTable = function (_React$Component) {
   }
 
   _createClass(DataTable, [{
+    key: 'toggleStudentVisibility',
+    value: function toggleStudentVisibility() {
+      this.setState(function (_ref) {
+        var studentVisibility = _ref.studentVisibility;
+        return { studentVisibility: !studentVisibility };
+      });
+    }
+  }, {
     key: 'toggleLab',
     value: function toggleLab() {
-      this.setState(function (_ref) {
-        var labActive = _ref.labActive;
+      this.setState(function (_ref2) {
+        var labActive = _ref2.labActive;
         return { labActive: !labActive };
       });
     }
@@ -67,7 +77,9 @@ var DataTable = function (_React$Component) {
           sort = _props.sort,
           entries = _props.entries,
           updateSort = _props.updateSort;
-      var labActive = this.state.labActive;
+      var _state2 = this.state,
+          studentVisibility = _state2.studentVisibility,
+          labActive = _state2.labActive;
 
       var columns = [['Section', 'section'], ['Student ID', 'student_id'], ['Score', 'score'], ['Lab', 'lab'], ['Date', 'date'], ['TA', 'ta'], ['Flags', 'flags']];
       return React.createElement(
@@ -79,10 +91,10 @@ var DataTable = function (_React$Component) {
           React.createElement(
             'tr',
             null,
-            columns.map(function (_ref2) {
-              var _ref3 = _slicedToArray(_ref2, 2),
-                  title = _ref3[0],
-                  name = _ref3[1];
+            columns.map(function (_ref3) {
+              var _ref4 = _slicedToArray(_ref3, 2),
+                  title = _ref4[0],
+                  name = _ref4[1];
 
               return React.createElement(
                 'th',
@@ -172,6 +184,15 @@ var DataTable = function (_React$Component) {
                     { className: 'icon' },
                     React.createElement('i', { className: 'fas fa-caret-' + (sort[name] > 0 ? 'down' : 'up') })
                   )
+                ),
+                name === 'student_id' && React.createElement(
+                  'a',
+                  { className: 'tooltip', 'data-tooltip': 'Toggle visibility', onClick: _this2.toggleStudentVisibility },
+                  React.createElement(
+                    'span',
+                    { className: 'icon has-text-info' },
+                    React.createElement('i', { className: 'fas fa-' + (studentVisibility ? 'eye-slash' : 'eye') })
+                  )
                 )
               );
             })
@@ -181,7 +202,7 @@ var DataTable = function (_React$Component) {
           'tbody',
           null,
           entries.map(function (entry) {
-            return React.createElement(DataRow, Object.assign({ key: entry._id }, entry));
+            return React.createElement(DataRow, Object.assign({ showStudent: studentVisibility, key: entry._id }, entry));
           })
         )
       );
