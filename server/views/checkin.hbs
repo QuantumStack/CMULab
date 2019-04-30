@@ -16,10 +16,16 @@
 						{{#if flags.section}}
 							This is wrong section time for {{student}}.
 						{{/if}}
+						&nbsp;
 						{{#if allowOverride}}
-							<u><a id="flag-toggle" onclick="flagOverride();">Override</a></u>
+								<a id="flag-toggle" class="button is-small is-white is-outlined is-rounded" onclick="flagOverride();">
+									<span>Override</span>
+								</a>
+								&nbsp;
 						{{/if}}
-						<u><a onclick="flagDismiss();">Dismiss</a></u>
+						<a class="button is-small is-white is-outlined is-rounded" onclick="flagDismiss();">
+							<span>Dismiss</span>
+						</a>
 						<script src="/javascripts/flag-manipulation.js"></script>
 					</strong>
 				</div>
