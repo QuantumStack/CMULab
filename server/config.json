@@ -12,6 +12,7 @@
   "flagSection": false,
   "flagAttempts": "",
   "flagAttemptsThreshold": 3600000,
+  "flagInvalid": true,
   "flagGhosts": true,
   "allowOverride": true,
   "sections": {}
