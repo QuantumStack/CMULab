@@ -95,7 +95,7 @@ router.get('/:student_id', authRequired, (req, res) => {
                 flags.attempt = true;
                 flags.attemptDiff = diff;
                 flags.attemptScore = entries[i].score;
-                return true;
+                break;
               }
             // flag attempt based on section if necessary
             } else if (flagAttempts === 'section') {
