@@ -15,23 +15,20 @@
 			</div>
 		</div>
 	</div>
+	<p class="help">This is a comma-separated string of scores.</p>
 	<div class="field is-horizontal">
 		<div class="field-body">
 			<div class="field">
-				<label class="label">Min score:</label>
+				<label class="label">Possible Scores:</label>
 				<div class="control">
-					<input class="input" name="minScore" type="number" value="{{config.minScore}}" placeholder="Example: 0" required>
-				</div>
-			</div>
-			<div class="field">
-				<label class="label">Max score:</label>
-				<div class="control">
-					<input class="input" name="maxScore" type="number" value="{{config.maxScore}}" placeholder="Example: 100" required>
+					<input class="input" name="possibleScores" type="text" value="{{config.possibleScores}}" placeholder="Example: 1.5,3,4"
+						required>
 				</div>
 			</div>
 		</div>
 	</div>
-	<p class="help">This is the offset from the course timezone to UTC.</p>
+	<p class="help">This is the offset from the course timezone to UTC</p>
+	<p class="help">(e.g. Eastern Standard Time is +4 hours)</p>
 	<div class="field is-horizontal">
 		<div class="field-body">
 			<div class="field">

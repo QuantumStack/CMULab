@@ -33,6 +33,8 @@ router.get('/:student_id', authRequired, (req, res) => {
     let section;
     const flags = {};
 
+    const possibleScores = config.get('possibleScores');
+    
     // render page with queried data and relevant configs
     function renderPage() {
       res.render('checkin', {
@@ -43,8 +45,9 @@ router.get('/:student_id', authRequired, (req, res) => {
         radio: config.get('radioInput'),
         lab: config.get('manualLab'),
         allowOverride: config.get('allowOverride'),
-        minscore: Number.parseInt(config.get('minScore'), 10),
-        maxscore: Number.parseInt(config.get('maxScore'), 10),
+        minscore: Math.min.apply(null, possibleScores),
+        maxscore: Math.max.apply(null, possibleScores),
+        possibleScores,
         flags,
       });
     }

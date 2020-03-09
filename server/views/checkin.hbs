@@ -71,9 +71,9 @@
 						<div class="field">
 							<label class="label">Score: {{> asterisk}}</label>
 							{{#if radio}}
-								<input id="score" class="is-hidden" name="score" type="number" required />
+								<input id="score" class="is-hidden" name="score" type="number" step="0.1" required />
 								<div class="columns is-multiline is-mobile">
-									{{#each (range minscore maxscore)}}
+									{{#each possibleScores}}
 										<div class="column">
 											<a id="score-{{this}}" onclick="setScore({{this}});" class="button is-fullwidth is-large score-button">
 												{{this}}
@@ -84,7 +84,7 @@
 								<script src="/javascripts/score-buttons.js"></script>
 							{{else}}
 								<div class="control">
-									<input class="input" name="score" type="number" step="0.5" placeholder="Example: 3" min="{{minscore}}" max="{{maxscore}}" required>
+									<input class="input" name="score" type="number" step="0.1" placeholder="Example: 3" min="{{minscore}}" max="{{maxscore}}" required>
 								</div>
 							{{/if}}
 						</div>

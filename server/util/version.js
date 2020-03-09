@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // current version
-const current = 'v1.4.2';
+const current = 'v1.4.4';
 let latest;
 
 // look for a new release on github
