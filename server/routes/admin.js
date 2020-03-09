@@ -330,6 +330,10 @@ router.post('/writeconfig', (req, res, next) => {
       // for flagAttempts, convert checkbox + selection to string
       if (key === 'flagAttempts') v = v.length === 3 ? v[2] : '';
 
+      if (key === 'possibleScores') {
+        v = v.split(',').map(x => Number(x));
+      }
+
       // for sections data, parse csv file
       if (key === 'sections') {
         if (value) {
