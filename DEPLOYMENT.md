@@ -122,6 +122,12 @@
 3. Obtain Google OAuth Information
 
     1. Obtain OAuth 2.0 credentials from the [Google API Console](https://console.developers.google.com/).
+
+        1. Go to credentials and create a project.
+        2. Create credentials for OAuth Client ID.
+           1. Configure the consent screen for external users, with the name "CMULab".
+           2. Set the Application Type to Web Application.
+           3. Set the Authorized redirect URIs to `https://domain`, replacing `domain` with your server's domain.
         - Keep a note of the Client ID and Client Secret. You will need these for later, but they must be kept secure.
   
 ## Setup CMULab
