@@ -210,6 +210,7 @@
         2. Setup firewall around Nginx.
 
             ```sh
+            $ sudo apt-get install ufw
             $ sudo ufw allow 'Nginx Full'
             ```
 
@@ -233,6 +234,7 @@
        1. Create a Nginx site replacing `your_domain` with your URL.
 
             ```sh
+            $ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/your_domain
             $ sudo nano /etc/nginx/sites-available/your_domain
             ```
 
