@@ -141,7 +141,7 @@
     $ cd CMULab/server
     ```
 
-2. Fill in `server/.env`
+2. Fill in `server/.env` with `$ nano .env`.
    -  Set `NODE_ENV=production`
    -  Set `CMULAB_DATABASE=”mongodb://127.0.0.1:27017/cmulab”`
    -  Set `CMULAB_LOC="your_server_address"`
