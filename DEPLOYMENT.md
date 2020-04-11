@@ -143,7 +143,7 @@
 
 2. Fill in `server/.env` with `$ nano .env`.
    -  Set `NODE_ENV=production`
-   -  Set `CMULAB_DATABASE=”mongodb://127.0.0.1:27017/cmulab”`
+   -  Set `CMULAB_DATABASE="mongodb://127.0.0.1:27017/cmulab”`
    -  Set `CMULAB_LOC="your_server_address"`
       -  For example, if your server was located at `http://cmulab.com`, set `CMULAB_LOC="http://cmulab.com`.
    -  Set `CMULAB_GOOGLE_ID` equal to the Client ID you obtained previously.
@@ -300,7 +300,10 @@
         ```
 
         - When prompted to redirect HTTP traffic to HTTPS, select the redirect option.
-        - Try accessing your server through `https://your_domain`.
+
+    3. Edit `CMULAB_LOC` in `.env` to be `https` instead of `http`.
+    4. Try accessing your server through `https://your_domain`.
+
 
 ## Configuring CMULab
 
