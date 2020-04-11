@@ -30,6 +30,8 @@ Learn more [here](https://cmulab.quantumstack.xyz)
 8. `npm start` to get started!
 9. Give instructors access to CMULab from the admin console
 
+For additional instructions, visit [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ## Images
 
 <img src="https://i.imgur.com/lqJ0iND.png" width="300" title="Homepage">
