@@ -59,6 +59,13 @@
 
 ## Setup Prerequisites
 
+- Log into the server and install `curl`
+
+    ```bash
+    $ sudo apt-get update
+    $ sudo apt-get install curl
+    ```
+
 1. Install [Node.js](https://nodejs.org/en/).
 
    ```bash
