@@ -234,24 +234,26 @@
        1. Create a Nginx site replacing `your_domain` with your URL.
 
             ```sh
-            $ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/your_domain
             $ sudo nano /etc/nginx/sites-available/your_domain
             ```
 
-       2. Within the `server` block, you should have an existing `location /` block. Replace the contents of that block with the following configuration
+       2. Add the following content to the file.
 
             ```conf
             server {
-            ...
-                location / {
-                    proxy_pass http://localhost:3000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host $host;
-                    proxy_cache_bypass $http_upgrade;
-                }
-            ...
+                    listen 80;
+                    listen [::]:80;
+
+                    server_name your_domain;
+
+                    location / {
+                       proxy_pass http://localhost:3000;
+                       proxy_http_version 1.1;
+                       proxy_set_header Upgrade $http_upgrade;
+                       proxy_set_header Connection 'upgrade';
+                       proxy_set_header Host $host;
+                       proxy_cache_bypass $http_upgrade;
+                   }
             }
             ```
 
