@@ -8,10 +8,13 @@
    - Make a note of your server's IP address.
 2. Add an `A` record from the desired domain to the static IP address.
 3. Use an SSH Key instead of a password. Disable passwords for the server. This is *very* important for security.
-    1. Generate an SSH Key on your local machine:
+    1. Generate an SSH Key on your **local** machine:
 
          ```bash
          $ ssh-keygen
+         Generating public/private rsa key pair.
+         Enter file in which to save the key (/Users/username/.ssh/id_rsa): ~/.ssh/cmulab_key
+         ...
          ```
 
          - Use a passphrase if possible. Do not lose this passphrase, otherwise you will lose access to the server.
@@ -19,14 +22,21 @@
     2. Transfer the SSH Key to the server:
 
         ```bash
-        $ ssh-copy-id -i ~/.ssh/mykey user@host
+        $ ssh-copy-id -i ~/.ssh/cmulab_key.pub user@host
         ```
 
     3. Test logging into the server with the new key.
 
         ```bash
-        $ ssh -i ~/.ssh/mykey user@host
+        $ ssh -i ~/.ssh/cmulab_key.pub user@host
         ```
+
+        - If you receive an `UNPROTECTED PRIVATE KEY FILE` error, run
+
+            ```bash
+            $ sudo chmod 600 ~/.ssh/cmulab_key
+            $ sudo chmod 600 ~/.ssh/cmulab_key.pub
+            ```
 
     4. Disable logging in without password.
        1. While logged into the server, edit the `/etc/ssh/sshd_config` file.
