@@ -257,19 +257,25 @@
             }
             ```
 
-       3. Verify that you didn't introduce any syntax errors.
+       3. Link the file to enabled sites replacing `your_domain` with your domain.
+
+            ```sh
+            $ sudo ln -s /etc/nginx/sites-available/your_domain /etc/nginx/sites-enabled/
+            ```
+
+       4. Verify that you didn't introduce any syntax errors.
 
             ```sh
             $ sudo nginx -t
             ```
 
-       4. Restart Nginx.
+       5. Restart Nginx.
 
             ```sh
             $ sudo systemctl restart nginx
             ```
 
-       5. Verify that the reverse proxy is working by accessing your domain in your browser: `http://your_domain`.
+       6. Verify that the reverse proxy is working by accessing your domain in your browser: `http://your_domain`.
 
 6. Secure the server with [Let's Encrypt](https://letsencrypt.org/).
     1. Install certbot.
