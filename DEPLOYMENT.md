@@ -28,7 +28,7 @@
     3. Test logging into the server with the new key.
 
         ```bash
-        $ ssh -i ~/.ssh/cmulab_key.pub user@host
+        $ ssh -i ~/.ssh/cmulab_key user@host
         ```
 
         - If you receive an `UNPROTECTED PRIVATE KEY FILE` error, run
