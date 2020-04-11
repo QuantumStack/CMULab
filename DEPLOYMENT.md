@@ -128,7 +128,7 @@
            1. Configure the consent screen for external users, with the name "CMULab".
               1. Add `domain` to your authorized domains, replacing `domain` with your server's domain.
            2. Set the Application Type to Web Application.
-           3. Set the Authorized redirect URIs to `https://domain`, replacing `domain` with your server's domain.
+           3. Set the Authorized redirect URIs to `https://domain/login/callback`, replacing `domain` with your server's domain.
         - Keep a note of the Client ID and Client Secret. You will need these for later, but they must be kept secure.
   
 ## Setup CMULab
@@ -136,6 +136,7 @@
 1. Clone the CMULab repository.
 
     ```sh
+    $ sudo apt-get install git
     $ git clone https://github.com/QuantumStack/CMULab
     $ cd CMULab/server
     ```
