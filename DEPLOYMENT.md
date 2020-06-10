@@ -324,12 +324,16 @@
    > db.users.insert({"_id": "andrew_id", "admin": true});
    ```
 
-   Go to the website, and go to the admin console and add the rest of the TA
-
 2. Edit `config.json`
     - Set `emailDomain` to be `andrew.cmu.edu`, or set to whatever email domain you are using.
     - Leave the rest untouched as you can edit them inside the server.
 
-3. Login to the server by clicking on `Admin Console` and logging in with the Google account corresponding to the email domain you used earlier.
+3. Restart the server through `pm2`
 
-4. Add remaining TAs through the TA page.
+    ```sh
+    $ pm2 restart [id]
+    ```
+
+4. Login to the server by clicking on `Admin Console` and logging in with the Google account corresponding to the email domain you used earlier.
+
+5. Add remaining TAs through the TA page.
