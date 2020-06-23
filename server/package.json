@@ -13,14 +13,14 @@
     "body-parser": "^1.18.3",
     "bulma": "^0.7.2",
     "bulma-tooltip": "^2.0.2",
-    "cookie-parser": "~1.4.3",
+    "cookie-parser": "^1.4.5",
     "csvtojson": "^2.0.8",
     "dotenv": "^6.2.0",
     "express": "~4.16.0",
     "express-handlebars": "^3.0.0",
-    "express-session": "^1.15.6",
+    "express-session": "^1.17.0",
     "http-errors": "~1.6.2",
-    "json2csv": "^4.3.3",
+    "json2csv": "^4.5.4",
     "moment": "^2.24.0",
     "mongodb": "^3.1.12",
     "mongoose": "^5.4.6",
@@ -39,7 +39,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.0",
-    "eslint-plugin-react": "^7.12.4"
+    "eslint-plugin-react": "^7.19.0"
   },
   "eslintConfig": {
     "extends": "airbnb-base",
