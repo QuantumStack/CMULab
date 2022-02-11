@@ -17,7 +17,7 @@
     "csvtojson": "^2.0.8",
     "dotenv": "^6.2.0",
     "express": "~4.16.0",
-    "express-handlebars": "^3.0.0",
+    "express-handlebars": "^5.3.1",
     "express-session": "^1.17.0",
     "http-errors": "~1.6.2",
     "json2csv": "^4.5.4",
